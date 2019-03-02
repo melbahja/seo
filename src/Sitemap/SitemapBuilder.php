@@ -195,6 +195,16 @@ class SitemapBuilder implements SitemapBuilderInterface
 	}
 
 	/**
+	 * I Don't know where my mind was when i named lastMode!
+	 *
+	 * @return SitemapBuilderInterface
+	 */
+	public function lastMod($date): SitemapBuilderInterface
+	{
+		return $this->lastMode($date);
+	}
+
+	/**
 	 * Set image
 	 *
 	 * @todo  Validate image options 
