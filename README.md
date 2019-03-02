@@ -600,9 +600,6 @@ New features coming in v1.1
 - Add a better documentation
 - Your suggestions [Open new issue 🤔]
 
-## Why >= PHP7.1 ?
-\- Why you are using an old version ?
-
 ## References
 - [Sitemaps protocol (https://www.sitemaps.org/protocol.html)](https://www.sitemaps.org/protocol.html)
 - [Build Sitemaps (https://support.google.com/webmasters/answer/183668?hl=en)](https://support.google.com/webmasters/answer/183668?hl=en)
@@ -611,8 +608,6 @@ New features coming in v1.1
 - [Video Sitemaps (https://support.google.com/webmasters/answer/80471)](https://support.google.com/webmasters/answer/80471)
 - [Mobile (https://developers.google.com/search/mobile-sites/mobile-seo/other-devices)](https://developers.google.com/search/mobile-sites/mobile-seo/other-devices)
 
-## Glad you made it here
-⭐⭐Star it⭐⭐
 
 ## License:
 [MIT](https://github.com/melbahja/seo/blob/master/LICENSE) Copyright (c) 2019 Mohamed Elbahja
