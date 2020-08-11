@@ -1,4 +1,5 @@
-# PHP SEO [![Build Status](https://img.shields.io/travis/melbahja/seo/master.svg)](https://travis-ci.org/melbahja/seo) ![PHP from Travis config](https://img.shields.io/travis/php-v/melbahja/seo.svg) [![Twitter](https://img.shields.io/twitter/url/https/github.com/melbahja/seo.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fmelbahja%2Fseo)
+# PHP SEO 
+[![Build Status](https://github.com/melbahja/seo/workflows/Test/badge.svg)](https://github.com/melbahja/seo/actions?query=workflow%3ATest) [![GitHub license](https://img.shields.io/github/license/melbahja/seo)](https://github.com/melbahja/seo/blob/master/LICENSE) ![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/melbahja/seo) ![Packagist Version](https://img.shields.io/packagist/v/melbahja/seo) [![Twitter](https://img.shields.io/twitter/url/https/github.com/melbahja/seo.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fmelbahja%2Fseo)
 
 Simple PHP library to help developers 🍻 do better on-page SEO optimization
 
@@ -8,7 +9,7 @@ Simple PHP library to help developers 🍻 do better on-page SEO optimization
 - [[🛀]](#-meta-tags) **Generate meta tags with twitter and open graph support**
 - [[🗺]](#-sitemaps) **Generate sitemaps xml and indexes (supports: 🖺 news, 🖼 images, 📽 videos)**
 - [[📤]](#-send-sitemaps-to-search-engines) **Submit new sitempas to 🌐 search engines**
-- [[🙈]](#see_composer_json) **No dependencies**
+- [[🙈]](https://github.com/melbahja/seo/blob/master/composer.json) **No dependencies**
 - [[🖧]](#todos) **&& more coming soon...**
 
 ## Installation:
