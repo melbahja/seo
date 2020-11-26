@@ -8,7 +8,7 @@ Simple PHP library to help developers 🍻 do better on-page SEO optimization
 - [[👷]](#-generate-schemaorg) **Generate schema.org ld+json**
 - [[🛀]](#-meta-tags) **Generate meta tags with twitter and open graph support**
 - [[🗺]](#-sitemaps) **Generate sitemaps xml and indexes (supports: 🖺 news, 🖼 images, 📽 videos)**
-- [[📤]](#-send-sitemaps-to-search-engines) **Submit new sitempas to 🌐 search engines**
+- [[📤]](#-send-sitemaps-to-search-engines) **Submit new sitemaps to 🌐 search engines**
 - [[🙈]](https://github.com/melbahja/seo/blob/master/composer.json) **No dependencies**
 - [[🖧]](#todos) **&& more coming soon...**
 
