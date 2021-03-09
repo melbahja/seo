@@ -4,13 +4,11 @@ namespace Tests\Melbahja\Seo;
 use Melbahja\Seo\{
 	Factory,
 	Exceptions\SeoException,
-	Exceptions\SitemapException,
 	Interfaces\SeoInterface,
 	Interfaces\SchemaInterface,
 	Interfaces\MetaTagsInterface,
 	Interfaces\SitemapInterface,
-	Interfaces\SitemapIndexInterface,
-	Interfaces\SitemapBuilderInterface
+	Interfaces\SitemapIndexInterface
 };
 
 class FactoryTest extends TestCase
@@ -26,7 +24,7 @@ class FactoryTest extends TestCase
 	public function testFactoryBuildSitemap()
 	{
 		$this->assertInstanceOf(SeoInterface::class, Factory::sitemap('https://example.com'));
-		
+
 		$this->assertInstanceOf(SitemapInterface::class, Factory::sitemap('https://example.com'));
 
 		$this->assertInstanceOf(SitemapIndexInterface::class, Factory::sitemap('https://example.com'));

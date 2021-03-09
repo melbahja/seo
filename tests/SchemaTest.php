@@ -16,19 +16,19 @@ class SchemaTest extends TestCase
 							->contactType('customer service');
 
 
-		$data = 
+		$data =
 		[
 			'@context' 	=> 'https://schema.org',
 			'@type' 	=> 'Organization',
 			'url' 		=> 'https://example.com',
 			'logo' 		=> 'https://example.com/logo.png',
-			'contactPoint' => 
+			'contactPoint' =>
 			[
 				'@type' 	=> 'ContactPoint',
 				'telephone' => '+1-000-555-1212',
 				'contactType' => 'customer service'
 			]
-		];	
+		];
 
 		$this->assertEquals($data, $schema->getRoot()->toArray());
 
