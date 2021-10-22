@@ -10,22 +10,5 @@ namespace Melbahja\Seo\Interfaces;
  */
 interface SchemaInterface extends SeoInterface, \JsonSerializable
 {
-
-	public function __construct(
-		string $type, array $data = [], ?SchemaInterface $parent = null, ?SchemaInterface $root = null
-	);
-
-	public function set(string $param, $value): SchemaInterface;
-
-	public function addChild(string $name, array $data = []): SchemaInterface;
-
-	public function toArray(): array;
-
-	public function getParent(): ?SchemaInterface;
-
-	public function getRoot(): ?SchemaInterface;
-
 	public function __toString(): string;
-
-	public function __get(string $name): SchemaInterface;
 }
