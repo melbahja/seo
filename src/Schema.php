@@ -5,36 +5,15 @@ use Melbahja\Seo\Interfaces\SchemaInterface;
 
 /**
  * @package Melbahja\Seo
- * @since v1.0
- * @see https://git.io/phpseo 
+ * @since v2.0
+ * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019 Mohamed Elabhja 
+ * @copyright 2019-present Mohamed Elabhja
  */
 class Schema implements SchemaInterface
 {
 
-	/**
-	 * Data
-	 * @var array
-	 */
-	protected $data = 
-	[
-		'@context' => 'https://schema.org',
-		'@type' => null
-	]
-
-	/**
-	 * Schema root
-	 * @var null|SchemaInterface
-	 */
-	, $root
-
-	/**
-	 * Child parent
-	 * @var null|SchemaInterface
-	 */
-	, $parent;
-
+	protected $things = [];
 
 	/**
 	 * @param string               $type
@@ -42,45 +21,21 @@ class Schema implements SchemaInterface
 	 * @param SchemaInterface|null $parent
 	 * @param SchemaInterface|null $root
 	 */
-	public function __construct(string $type, array $data = [], ?SchemaInterface $parent = null, ?SchemaInterface $root = null) 
+	public function __construct(SchemaInterface ...$things)
 	{
-		$this->data = array_merge($this->data, $data);
-		$this->data['@type'] = ucfirst($type);
-
-		if ($parent !== null) {
-			
-			unset($this->data['@context']);
-		}
-
-		$this->parent = $parent;
-		$this->root = $root;
+		$this->things = $things;
 	}
 
+
 	/**
-	 * Set a property
+	 * Add schema item to the graph.
 	 *
-	 * @param  string $param
-	 * @param  array|scalar|SchemaInterface $value
-	 * @return SchemaInterface
+	 * @param SchemaInterface $thing
 	 */
-	public function set(string $param, $value): SchemaInterface
+	public function add(SchemaInterface $thing): SchemaInterface
 	{
-		$this->data[$param] = $value;
+		$this->things[] = $thing;
 		return $this;
-	}
-
-	/**
-	 * Add child
-	 *
-	 * @param string $name
-	 * @param array  $data
-	 * @return SchemaInterface The child object
-	 */
-	public function addChild(string $name, array $data = []): SchemaInterface
-	{
-		$this->set($name, $child = new static($name, $data, $this, $this->root ?? $this));
-	
-		return $child;
 	}
 
 	/**
@@ -88,54 +43,14 @@ class Schema implements SchemaInterface
 	 *
 	 * @return array
 	 */
-	public function toArray(): array
+	public function jsonSerialize(): array
 	{
-		$data = [];
-
-		foreach ($this->data as $k => $v)
-		{
-			if (is_object($v)) {
-
-				$data[$k] = $v->toArray();
-
-				continue;
-			}
-
-			$data[$k] = $v;
-		}
-
-		return $data;
+		return [
+			'@context' => 'https://schema.org',
+			'@graph'   => $this->things
+		];
 	}
 
-	/**
-	 * Get parent schema
-	 *
-	 * @return null|SchemaInterface
-	 */
-	public function getParent(): ?SchemaInterface
-	{
-		return $this->parent;
-	}
-
-	/**
-	 * Get root schema
-	 *
-	 * @return null|SchemaInterface
-	 */
-	public function getRoot(): ?SchemaInterface
-	{
-		return $this->root;
-	}
-
-	/**
-	 * Serialize current to json
-	 *
-	 * @return array
-	 */
-	public function jsonSerialize()
-	{
-		return $this->toArray();
-	}
 
 	/**
 	 * Serialize root schema
@@ -144,26 +59,7 @@ class Schema implements SchemaInterface
 	 */
 	public function __toString(): string
 	{
-		return '<script type="application/ld+json">'. json_encode($this->root ?? $this) .'</script>';
+		return '<script type="application/ld+json">'. json_encode($this->jsonSerialize()) .'</script>';
 	}
 
-	/**
-	 * @see {@method set}
-	 * @return SchemaInterface
-	 */
-	public function __call(string $param, array $value): SchemaInterface
-	{
-		return $this->set($param, ...$value);
-	}
-
-	/**
-	 * Get new schema child
-	 *
-	 * @param  string $name
-	 * @return SchemaInterface
-	 */
-	public function __get(string $name): SchemaInterface
-	{
-		return $this->addChild($name);
-	}
 }
