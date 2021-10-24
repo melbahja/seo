@@ -11,10 +11,10 @@ use Melbahja\Seo\{
 
 /**
  * @package Melbahja\Seo
- * @since v1.0
- * @see https://git.io/phpseo 
+ * @since v2.0
+ * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019 Mohamed Elabhja 
+ * @copyright 2019-present Mohamed Elabhja
  */
 class Sitemap implements SitemapIndexInterface
 {
@@ -27,7 +27,7 @@ class Sitemap implements SitemapIndexInterface
 	[
 		'save_path' => null,
 		'index_name' => 'sitemap.xml',
-		'sitemaps_url' => null
+		'sitemaps_url' => null,
 	]
 
 	/**
@@ -54,7 +54,6 @@ class Sitemap implements SitemapIndexInterface
 		$this->domain = $domain;
 
 		if ($options !== null) {
-
 			$this->setOptions($options);
 		}
 	}
@@ -68,7 +67,6 @@ class Sitemap implements SitemapIndexInterface
 	public function setOptions(array $options): SitemapIndexInterface
 	{
 		$this->options = array_merge($this->options, $options);
-
 		return $this;
 	}
 
@@ -145,7 +143,7 @@ class Sitemap implements SitemapIndexInterface
 	 */
 	public function getSitemapsUrl(): ?string
 	{
-		return $this->options['sitemaps_url'];
+		return $this->options['sitemaps_url'] ?? $this->domain;
 	}
 
 	/**
@@ -167,7 +165,7 @@ class Sitemap implements SitemapIndexInterface
 	public function saveTo(string $path): bool
 	{
 		return SitemapIndex::build(
-			$this->options['index_name'], $path, ($this->options['sitemaps_url'] ?? $this->domain), $this->sitemaps
+			$this->getIndexName(), $path, $this->getSitemapsUrl(), $this->sitemaps
 		);
 	}
 
@@ -199,14 +197,13 @@ class Sitemap implements SitemapIndexInterface
 	public function build(SitemapBuilderInterface $builder, array $options, callable $func): SitemapIndexInterface
 	{
 		if (isset($this->sitemaps[$options['name']])) {
-
 			throw new SitemapException("The sitemap {$name} already registred!");
 		}
 
-		# Call generator
+		// Generate urls.
 		call_user_func_array($func, [$builder]);
 
-		return $this->setBuilder($options['name'], $builder);
+		return $this->buildTemp($options['name'], $builder);
 	}
 
 	/**
@@ -233,7 +230,7 @@ class Sitemap implements SitemapIndexInterface
 
 				throw new SitemapException("Sitemap name is required for {$builder}");
 			}
-				
+
 			return $this->build(new $builder($this->domain, $args[0]), ...$args);
 		}
 
@@ -247,10 +244,9 @@ class Sitemap implements SitemapIndexInterface
 	 * @param SitemapBuilderInterface $builder
 	 * @return SitemapIndexInterface
 	 */
-	protected function setBuilder(string $name, SitemapBuilderInterface $builder): SitemapIndexInterface
+	protected function buildTemp(string $name, SitemapBuilderInterface $builder): SitemapIndexInterface
 	{
 		$this->sitemaps[$name] = $builder->saveTemp();
-
 		return $this;
 	}
 }

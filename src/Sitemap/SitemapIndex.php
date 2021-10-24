@@ -6,10 +6,10 @@ use Melbahja\Seo\Exceptions\SitemapException;
 
 /**
  * @package Melbahja\Seo
- * @since v1.0
- * @see https://git.io/phpseo 
+ * @since v2.0
+ * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019 Mohamed Elabhja 
+ * @copyright 2019-present Mohamed Elabhja
  */
 class SitemapIndex
 {
@@ -39,7 +39,6 @@ class SitemapIndex
 		foreach ($maps as $name => $file)
 		{
 			if (rename($file, ($dest = $path . $name)) === false) {
-
 				throw new SitemapException("Moving the file {$dest} failed!");
 			}
 
