@@ -20,6 +20,7 @@ jobs:
                 php:
                     - 8.0
                     - 7.4
+                experimental: [false]
 
         name: PHP ${{ matrix.php }} test on ${{ matrix.os }}
         steps:
