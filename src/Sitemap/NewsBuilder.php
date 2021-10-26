@@ -8,10 +8,10 @@ use Melbahja\Seo\{
 
 /**
  * @package Melbahja\Seo
- * @since v1.0
- * @see https://git.io/phpseo 
+ * @since v2.0
+ * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019 Mohamed Elabhja 
+ * @copyright 2019-present Mohamed Elabhja
  */
 class NewsBuilder extends SitemapBuilder 
 {
@@ -76,13 +76,12 @@ class NewsBuilder extends SitemapBuilder
 		$options['language'] = $options['language'] ?? $this->publication['lang'];
 
 		if (isset($options['name'], $options['language'], $options['publication_date'], $options['title']) === false) {
-
 			throw new SitemapException("News map require: name, language, publication_date and title");
 		}
 
 		$this->url['news'] = $options;
 
-		return $this;		
+		return $this;
 	}
 
 }

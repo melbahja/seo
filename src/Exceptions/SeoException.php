@@ -5,9 +5,9 @@ use Exception;
 
 /**
  * @package Melbahja\Seo
- * @since v1.0
- * @see https://git.io/phpseo 
+ * @since v2.0
+ * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019 Mohamed Elabhja 
+ * @copyright 2019-present Mohamed Elabhja
  */
 class SeoException extends Exception { }

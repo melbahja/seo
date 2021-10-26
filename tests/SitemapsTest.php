@@ -2,7 +2,6 @@
 namespace Tests\Melbahja\Seo;
 
 use Melbahja\Seo\{
-	Factory,
 	Sitemap,
 	Sitemap\SitemapBuilder,
 	Exceptions\SitemapException
@@ -11,15 +10,9 @@ use Melbahja\Seo\{
 class SitemapsTest extends TestCase
 {
 
-	public function testFactoryAndSitempObjects()
-	{
-		$this->assertEquals(new Sitemap('https://example.com'), Factory::sitemap('https://example.com'));
-	}
-
-
 	public function testSitemapBuilderWithNoSavePath()
 	{
-		$sitemap = Factory::sitemap('https://example.com');
+		$sitemap = new Sitemap('https://example.com');
 
 		$posts = $sitemap->links(['name' => 'posts.xml'], function(SitemapBuilder $builder)
 		{
@@ -36,7 +29,8 @@ class SitemapsTest extends TestCase
 	{
 		$this->expectException(SitemapException::class);
 
-		Factory::sitemap('https://example.com', ['save_path' => '/'])->links(['name' => 't.xml'], function($builder)
+		$sitemap = new Sitemap('https://example.com', ['save_path' => '/']);
+		$sitemap->links(['name' => 't.xml'], function($builder)
 		{
 			$builder->loc('/about');
 
@@ -240,7 +234,7 @@ class SitemapsTest extends TestCase
 
 	public function testStitemapsWithCustomUrl()
 	{
-		$sitemap = Factory::sitemap('https://example.con',
+		$sitemap = new Sitemap('https://example.con',
 		[
 			'save_path' => sys_get_temp_dir(),
 			'sitemaps_url' => 'https://example.com/sitemaps'
@@ -330,6 +324,6 @@ class SitemapsTest extends TestCase
 
 	public function sitemapProvider()
 	{
-		return Factory::sitemap('https://example.com', ['save_path' => sys_get_temp_dir()]);
+		return new Sitemap('https://example.com', ['save_path' => sys_get_temp_dir()]);
 	}
 }

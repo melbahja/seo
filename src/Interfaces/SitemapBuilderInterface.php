@@ -3,10 +3,10 @@ namespace Melbahja\Seo\Interfaces;
 
 /**
  * @package Melbahja\Seo
- * @since v1.0
- * @see https://git.io/phpseo 
+ * @since v2.0
+ * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019 Mohamed Elabhja 
+ * @copyright 2019-present Mohamed Elabhja
  */
 interface SitemapBuilderInterface extends SeoInterface
 {
@@ -14,7 +14,6 @@ interface SitemapBuilderInterface extends SeoInterface
 	 * Images namespace
 	 */
 	public const IMAGE_NS = 'http://www.google.com/schemas/sitemap-image/1.1';
-
 
 	/**
 	 * Videos namespace
@@ -29,13 +28,13 @@ interface SitemapBuilderInterface extends SeoInterface
 
 	public function loc(string $path): SitemapBuilderInterface;
 
-	public function lastMode($date): SitemapBuilderInterface;
+	public function lastMod($date): SitemapBuilderInterface;
 
 	public function image(string $imageUrl, array $options = []): SitemapBuilderInterface;
 
 	public function video(string $title, array $options = []): SitemapBuilderInterface;
 
-	public function changefreq(string $freq): SitemapBuilderInterface;
+	public function changeFreq(string $freq): SitemapBuilderInterface;
 
 	public function priority(string $priority): SitemapBuilderInterface;
 
