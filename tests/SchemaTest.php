@@ -35,15 +35,20 @@ class SchemaTest extends TestCase
 			'url' => 'https://gool.com',
 		]);
 
+		$webpage = new Thing("WebPage", [
+			'@id' => "https://example.com/product/#webpage",
+			'url' => "https://example.com/product",
+			'name' => 'Foo Bar',
+		]);
+
 
 		$schema = new Schema(
 			$product,
+			$webpage,
 		);
 
 
-
-
-		$this->assertEquals('<script type="application/ld+json">{"@context":"https:\/\/schema.org","@graph":[{"name":"Foo Bar","sku":"sk12","image":"\/image.jpeg","description":"testing","offers":{"availability":"https:\/\/schema.org\/InStock","priceCurrency":"USD","price":"119.99","url":"https:\/\/gool.com","@type":"Offer","@context":"https:\/\/schema.org\/"},"@type":"Product","@context":"https:\/\/schema.org\/"}]}</script>', (string) $schema);
+		$this->assertEquals('<script type="application/ld+json">{"@context":"https:\/\/schema.org","@graph":[{"name":"Foo Bar","sku":"sk12","image":"\/image.jpeg","description":"testing","offers":{"availability":"https:\/\/schema.org\/InStock","priceCurrency":"USD","price":"119.99","url":"https:\/\/gool.com","@type":"Offer","@context":"https:\/\/schema.org\/"},"@type":"Product","@context":"https:\/\/schema.org\/"},{"@id":"https:\/\/example.com\/product\/#webpage","url":"https:\/\/example.com\/product","name":"Foo Bar","@type":"WebPage","@context":"https:\/\/schema.org\/"}]}</script>', (string) $schema);
 
 	}
 }
