@@ -20,7 +20,6 @@ jobs:
                 php:
                     - 8.0
                     - 7.4
-                    - 7.1
                     - 7.2
                 experimental: [false]
 
