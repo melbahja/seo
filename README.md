@@ -525,7 +525,7 @@ $ping->send('https://example.com/sitemap_file.xml');
 
 ```
 
-## Indexing API
+### Indexing API
 
 This is the first PHP library to support the new search engines indexing API (aka indexnow.org).
 
@@ -546,7 +546,7 @@ $indexer->indexUrls(['https://www.example.com/page']);
 
 ```
 
-## Sponsors:
+## Sponsors
 
 Special thanks to friends who support this work financially:
 
@@ -562,5 +562,5 @@ Special thanks to friends who support this work financially:
 - [Mobile (https://developers.google.com/search/mobile-sites/mobile-seo/other-devices)](https://developers.google.com/search/mobile-sites/mobile-seo/other-devices)
 
 
-## License:
+## License
 [MIT](https://github.com/melbahja/seo/blob/master/LICENSE) Copyright (c) 2019-present Mohamed Elbahja
