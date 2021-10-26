@@ -44,7 +44,7 @@ class SchemaTest extends TestCase
 
 		$schema = new Schema(
 			$product,
-			$webpage,
+			$webpage
 		);
 
 
