@@ -381,7 +381,7 @@ $sitemap->links(['name' => 'posts.xml', 'videos' => true], function($map)
         // player_loc or content_loc one of them is required
         'player_loc' => 'https://example.com/embed/81287127'
 
-        // for all availabe options see References -> videos
+        // for all available options see References -> videos
     ]);
 
     $map->loc('posts/bla-bla');
