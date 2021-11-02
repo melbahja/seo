@@ -23,7 +23,7 @@ class Organization extends Thing
 		return $this;
 	}
 
-	public function setContactPoint(Thing $value) :self
+	public function setContactPoint(ContactPoint $value) :self
 	{
 		$this->data['contactPoint']=$value;
 		return $this;

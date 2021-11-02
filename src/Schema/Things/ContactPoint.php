@@ -2,7 +2,9 @@
 
 namespace Melbahja\Seo\Schema\Things;
 
-class ContactPoint extends \Melbahja\Seo\Schema\Thing
+use Melbahja\Seo\Schema\Thing;
+
+class ContactPoint extends Thing
 {
 	public function __construct()
 	{
