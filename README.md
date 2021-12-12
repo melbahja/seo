@@ -557,7 +557,7 @@ Special thanks to friends who support this work financially:
 - [Sitemaps protocol (https://www.sitemaps.org/protocol.html)](https://www.sitemaps.org/protocol.html)
 - [Build Sitemaps (https://support.google.com/webmasters/answer/183668?hl=en)](https://support.google.com/webmasters/answer/183668?hl=en)
 - [News Sitemaps (https://support.google.com/webmasters/answer/74288)](https://support.google.com/webmasters/answer/74288)
-- [Image Sitempas (https://support.google.com/webmasters/answer/178636)](https://support.google.com/webmasters/answer/178636)
+- [Image Sitemaps (https://support.google.com/webmasters/answer/178636)](https://support.google.com/webmasters/answer/178636)
 - [Video Sitemaps (https://support.google.com/webmasters/answer/80471)](https://support.google.com/webmasters/answer/80471)
 - [Mobile (https://developers.google.com/search/mobile-sites/mobile-seo/other-devices)](https://developers.google.com/search/mobile-sites/mobile-seo/other-devices)
 
