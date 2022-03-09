@@ -271,6 +271,21 @@ class MetaTags implements SeoInterface
 		return $out;
 	}
 
+	/**
+	 * Generate tags explicitly
+	 *
+	 * @return string
+	 */
+	public function generate(): string
+	{
+		$title = '';
+		if ($this->title !== null) {
+			$title = "<title>{$this->title}</title>";
+		}
+
+		return $title . $this->build($this->tags) . $this->build($this->twitterTags) . $this->build($this->openGraphTags) ;
+	}
+
 
 	/**
 	 * Object to string

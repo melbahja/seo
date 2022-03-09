@@ -51,6 +51,16 @@ class Schema implements SchemaInterface
 		];
 	}
 
+	/**
+	 * Generate schema explicitly
+	 *
+	 * @return string
+	 */
+	public function generate(): string
+	{
+		return '<script type="application/ld+json">'. json_encode($this->jsonSerialize()) .'</script>';
+	}
+
 
 	/**
 	 * Serialize root schema
