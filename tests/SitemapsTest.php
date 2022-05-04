@@ -17,7 +17,7 @@ class SitemapsTest extends TestCase
 		$posts = $sitemap->links(['name' => 'posts.xml'], function(SitemapBuilder $builder)
 		{
 			$builder->loc('/posts/12')->priority("0.9");
-			$builder->loc('/posts/13')->priority("0.9");
+			$builder->loc('/posts/13')->priority("0.9")->lastMod(date('c'));
 		});
 
 		$this->expectException(SitemapException::class);
