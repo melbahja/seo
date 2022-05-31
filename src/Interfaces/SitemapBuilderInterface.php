@@ -20,6 +20,12 @@ interface SitemapBuilderInterface extends SeoInterface
 	 */
 	public const VIDEO_NS = 'http://www.google.com/schemas/sitemap-video/1.1';
 
+
+	/**
+	 * XHTML links namespace
+	 */
+	public const XHTML_NS = 'http://www.w3.org/1999/xhtml';
+
 	/**
 	 * News namespace
 	 * @var string

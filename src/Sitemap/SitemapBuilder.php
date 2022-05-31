@@ -64,6 +64,7 @@ class SitemapBuilder implements SitemapBuilderInterface
 	[
 		'images' => false,
 		'videos' => false,
+		'localized' => false,
 	];
 
 
@@ -87,6 +88,10 @@ class SitemapBuilder implements SitemapBuilderInterface
 
 		if ($this->options['videos']) {
 			$urlset .= ' xmlns:video="'. static::VIDEO_NS .'"';
+		}
+
+		if ($this->options['localized']) {
+			$urlset .= 'xmlns:xhtml="'. static::XHTML_NS .'"';
 		}
 
 		$this->doc = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?>' . $urlset . "{$ns}/>");
@@ -120,6 +125,23 @@ class SitemapBuilder implements SitemapBuilderInterface
 		}
 
 		$this->url['loc'] = Helper::escapeUrl($url);
+		return $this;
+	}
+
+	/**
+	 * Set alternative language url for multi lang support.
+	 *
+	 * @param  string $url
+	 * @param  string $lang   ISO 639-1 or ISO 3166-1 alpha-2
+	 * @return SitemapBuilderInterface
+	 */
+	public function alternate(string $path, string $lang)
+	{
+		if ($path[0] !== '/') {
+			$path = "/{$path}";
+		}
+
+		$this->url['alternate'][] = [Helper::escapeUrl($this->domain . $path), $lang];
 		return $this;
 	}
 
@@ -164,6 +186,19 @@ class SitemapBuilder implements SitemapBuilderInterface
 					foreach ($v as $k => $p)
 					{
 						$child->addChild("{$n}:{$k}", $p);
+					}
+
+					continue;
+
+				} elseif ($n === 'alternate') {
+
+
+					foreach ($v as $k => $alt)
+					{
+						$child = $url->addChild('xhtml:link', null, static::XHTML_NS);
+						$child->addAttribute('rel', 'alternate');
+						$child->addAttribute('href', $alt[0]);
+						$child->addAttribute('hreflang', $alt[1]);
 					}
 
 					continue;
