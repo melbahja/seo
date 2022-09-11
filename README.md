@@ -146,6 +146,16 @@ echo $metatags;
 
 ```
 
+You can also use `generate()` method to get the string output.
+
+```php
+// schema
+$schema->generate();
+
+// metatags
+$metatags->generate();
+```
+
 **Results:**
 ```html
 <title>PHP SEO</title>
