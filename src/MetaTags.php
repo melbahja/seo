@@ -155,7 +155,7 @@ class MetaTags implements SeoInterface
 	{
 		return $this->push('link', [
 			'rel' => 'alternate',
-			'url' => $url,
+			'href' => $url,
 			'hreflang' => $lang,
 		]);
 	}
