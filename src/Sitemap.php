@@ -1,7 +1,7 @@
 <?php
+
 namespace Melbahja\Seo;
 
-use Closure;
 use Melbahja\Seo\{
 	Sitemap\SitemapIndex,
 	Exceptions\SitemapException,
@@ -23,24 +23,25 @@ class Sitemap implements SitemapIndexInterface
 	 * Sitemap options
 	 * @var array
 	 */
-	protected $options = 
-	[
-		'save_path' => null,
-		'index_name' => 'sitemap.xml',
-		'sitemaps_url' => null,
-	]
+	protected $options =
+		[
+			'save_path' => null,
+			'index_name' => 'sitemap.xml',
+			'sitemaps_url' => null,
+		]
 
-	/**
-	 * Sitemap files
-	 * @var array
-	 */
-	, $sitemaps  = []
+		/**
+		 * Sitemap files
+		 * @var array
+		 */
+		, $sitemaps  = [];
 
 	/**
 	 * Sitemaps domain name
 	 * @var string
 	 */
-	, $domain;
+
+	protected string $domain;
 
 
 	/**
@@ -49,7 +50,7 @@ class Sitemap implements SitemapIndexInterface
 	 * @param string $domain The domain name only
 	 * @param array  $options
 	 */
-	public function __construct(string $domain, array $options = null)
+	public function __construct(string $domain, array|null $options = null)
 	{
 		$this->domain = $domain;
 
@@ -165,7 +166,10 @@ class Sitemap implements SitemapIndexInterface
 	public function saveTo(string $path): bool
 	{
 		return SitemapIndex::build(
-			$this->getIndexName(), $path, $this->getSitemapsUrl(), $this->sitemaps
+			$this->getIndexName(),
+			$path,
+			$this->getSitemapsUrl(),
+			$this->sitemaps
 		);
 	}
 
@@ -179,7 +183,7 @@ class Sitemap implements SitemapIndexInterface
 	{
 		if (is_string($this->options['save_path']) === false) {
 
-			throw new SitemapException('Invalid or missing save_path option'); 
+			throw new SitemapException('Invalid or missing save_path option');
 		}
 
 		return $this->saveTo($this->options['save_path']);
@@ -197,7 +201,7 @@ class Sitemap implements SitemapIndexInterface
 	public function build(SitemapBuilderInterface $builder, array $options, callable $func): SitemapIndexInterface
 	{
 		if (isset($this->sitemaps[$options['name']])) {
-			throw new SitemapException("The sitemap {$name} already registred!");
+			throw new SitemapException("The sitemap {$this->sitemaps[$options['name']]} already registred!");
 		}
 
 		// Generate urls.
@@ -220,7 +224,6 @@ class Sitemap implements SitemapIndexInterface
 			if (count($args) !== 2) {
 
 				throw new SitemapException("Invalid {$builder} arguments");
-			
 			} elseif (is_string($args[0])) {
 
 				$args[0] = ['name' => $args[0]];
