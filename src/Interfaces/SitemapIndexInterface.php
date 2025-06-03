@@ -1,4 +1,5 @@
 <?php
+
 namespace Melbahja\Seo\Interfaces;
 
 /**
@@ -10,7 +11,7 @@ namespace Melbahja\Seo\Interfaces;
  */
 interface SitemapIndexInterface extends SitemapInterface
 {
-	public function __construct(string $domain, array $options = null);
+	public function __construct(string $domain, array $options = []);
 
 	public function setOptions(array $options): SitemapIndexInterface;
 
@@ -22,5 +23,5 @@ interface SitemapIndexInterface extends SitemapInterface
 
 	public function build(SitemapBuilderInterface $builder, array $options, callable $func): SitemapIndexInterface;
 
-	public function __call(string $builder, array $args): SitemapIndexInterface;	
+	public function __call(string $builder, array $args): SitemapIndexInterface;
 }
