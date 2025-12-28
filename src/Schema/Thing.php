@@ -1,4 +1,5 @@
 <?php
+
 namespace Melbahja\Seo\Schema;
 
 use Melbahja\Seo\Interfaces\SchemaInterface;
@@ -16,7 +17,7 @@ class Thing implements SchemaInterface
 
 	protected $type;
 	protected $data    = [];
-	public    $context = null;
+	public    ?string $context = null;
 
 
 	public function __construct(string $type, array $data = [])
@@ -25,13 +26,13 @@ class Thing implements SchemaInterface
 		$this->type = $type;
 	}
 
-	public function __get(string $name)
+	public function __get(string $name): mixed
 	{
 		return $this->data[$name] ?? null;
 	}
 
 
-	public function __set(string $name, $value)
+	public function __set(string $name, mixed $value): void
 	{
 		$this->data[$name] = $value;
 	}
@@ -48,6 +49,6 @@ class Thing implements SchemaInterface
 
 	public function __toString(): string
 	{
-		return '<script type="application/ld+json">'. json_encode($this) . '</script>';
+		return '<script type="application/ld+json">' . json_encode($this) . '</script>';
 	}
 }

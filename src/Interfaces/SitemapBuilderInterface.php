@@ -1,4 +1,5 @@
 <?php
+
 namespace Melbahja\Seo\Interfaces;
 
 /**
@@ -34,7 +35,7 @@ interface SitemapBuilderInterface extends SeoInterface
 
 	public function loc(string $path): SitemapBuilderInterface;
 
-	public function lastMod($date): SitemapBuilderInterface;
+	public function lastMod(string|int $date): SitemapBuilderInterface;
 
 	public function image(string $imageUrl, array $options = []): SitemapBuilderInterface;
 

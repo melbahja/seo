@@ -1,4 +1,5 @@
 <?php
+
 namespace Melbahja\Seo;
 
 use Melbahja\Seo\Interfaces\SeoInterface;
@@ -33,9 +34,9 @@ class MetaTags implements SeoInterface
 
 	/**
 	 * Page title
-	 * @var string
+	 * @var string|null
 	 */
-	public $title = null;
+	public ?string $title = null;
 
 	/**
 	 * Initiablize new meta tags builder
@@ -44,8 +45,7 @@ class MetaTags implements SeoInterface
 	 */
 	public function __construct(array $tags = [])
 	{
-		foreach ($tags as $k => $v)
-		{
+		foreach ($tags as $k => $v) {
 			if (method_exists(static::class, $k)) {
 				$this->$k($v);
 				continue;
@@ -184,8 +184,7 @@ class MetaTags implements SeoInterface
 	 */
 	public function push(string $name, array $attrs): MetaTags
 	{
-		foreach ($attrs as $k => $v)
-		{
+		foreach ($attrs as $k => $v) {
 			$attrs[$k] = $v;
 		}
 
@@ -256,13 +255,11 @@ class MetaTags implements SeoInterface
 	{
 		$out = '';
 
-		foreach ($tags as $tag)
-		{
+		foreach ($tags as $tag) {
 			$out .= "\n<{$tag[0]} ";
 
-			foreach ($tag[1] as $a => $v)
-			{
-				$out .= $a .'="'. Helper::escape($v) .'" ';
+			foreach ($tag[1] as $a => $v) {
+				$out .= $a . '="' . Helper::escape($v) . '" ';
 			}
 
 			$out .= "/>";
@@ -284,6 +281,6 @@ class MetaTags implements SeoInterface
 			$title = "<title>{$this->title}</title>";
 		}
 
-		return $title . $this->build($this->tags) . $this->build($this->twitterTags) . $this->build($this->openGraphTags) ;
+		return $title . $this->build($this->tags) . $this->build($this->twitterTags) . $this->build($this->openGraphTags);
 	}
 }
