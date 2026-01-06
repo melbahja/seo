@@ -2,13 +2,14 @@
 namespace Melbahja\Seo;
 
 use Melbahja\Seo\Interfaces\SeoInterface;
+use Melbahja\Seo\Utils\Utils;
 
 /**
  * @package Melbahja\Seo
  * @since v2.0
- * @see https://git.io/phpseo 
+ * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019-present Mohamed Elabhja
+ * @copyright Mohamed Elabhja
  */
 class MetaTags implements SeoInterface
 {
@@ -63,7 +64,7 @@ class MetaTags implements SeoInterface
 	 */
 	public function title(string $title): MetaTags
 	{
-		$this->title = Helper::escape($title);
+		$this->title = Utils::escape($title);
 		return $this->meta('title', $title)->og('title', $title)->twitter('title', $title);
 	}
 
@@ -262,7 +263,7 @@ class MetaTags implements SeoInterface
 
 			foreach ($tag[1] as $a => $v)
 			{
-				$out .= $a .'="'. Helper::escape($v) .'" ';
+				$out .= $a .'="'. Utils::escape($v) .'" ';
 			}
 
 			$out .= "/>";

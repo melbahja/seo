@@ -3,7 +3,7 @@ namespace Melbahja\Seo\Sitemap;
 
 use SimpleXMLElement;
 use Melbahja\Seo\{
-	Helper,
+	Utils\Utils,
 	Exceptions\SitemapException,
 	Interfaces\SitemapBuilderInterface
 };
@@ -13,7 +13,7 @@ use Melbahja\Seo\{
  * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019-present Mohamed Elabhja
+ * @copyright Mohamed Elabhja
  */
 class SitemapBuilder implements SitemapBuilderInterface
 {
@@ -124,7 +124,7 @@ class SitemapBuilder implements SitemapBuilderInterface
 			throw new SitemapException("The maximum urls has been exhausted");
 		}
 
-		$this->url['loc'] = Helper::escapeUrl($url);
+		$this->url['loc'] = Utils::escapeUrl($url);
 		return $this;
 	}
 
@@ -141,7 +141,7 @@ class SitemapBuilder implements SitemapBuilderInterface
 			$path = "/{$path}";
 		}
 
-		$this->url['alternate'][] = [Helper::escapeUrl($this->domain . $path), $lang];
+		$this->url['alternate'][] = [Utils::escapeUrl($this->domain . $path), $lang];
 		return $this;
 	}
 

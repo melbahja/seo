@@ -8,7 +8,7 @@ use Melbahja\Seo\Interfaces\SchemaInterface;
  * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019-present Mohamed Elabhja
+ * @copyright Mohamed Elabhja
  */
 class Schema implements SchemaInterface
 {

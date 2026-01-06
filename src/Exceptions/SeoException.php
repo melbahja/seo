@@ -8,6 +8,6 @@ use Exception;
  * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019-present Mohamed Elabhja
+ * @copyright Mohamed Elabhja
  */
 class SeoException extends Exception { }

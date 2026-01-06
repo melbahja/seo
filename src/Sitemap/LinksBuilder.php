@@ -6,6 +6,6 @@ namespace Melbahja\Seo\Sitemap;
  * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019-present Mohamed Elabhja
+ * @copyright Mohamed Elabhja
  */
 class LinksBuilder extends SitemapBuilder { }

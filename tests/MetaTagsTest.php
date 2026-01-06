@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Melbahja\Seo;
 
+use PHPUnit\Framework\TestCase;
 use Melbahja\Seo\MetaTags;
 
 class MetaTagsTest extends TestCase

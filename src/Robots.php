@@ -8,7 +8,7 @@ use Melbahja\Seo\Interfaces\SeoInterface;
  * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019-present Mohamed Elabhja
+ * @copyright Mohamed Elabhja
  */
 class Robots implements SeoInterface
 {

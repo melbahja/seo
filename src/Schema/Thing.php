@@ -8,42 +8,42 @@ use Melbahja\Seo\Interfaces\SchemaInterface;
  * @package Melbahja\Seo
  * @since v2.0
  * @see https://git.io/phpseo
+ * @see https://schema.org/Thing
  * @license MIT
- * @copyright 2019-present Mohamed Elabhja
+ * @copyright Mohamed Elabhja
  */
 class Thing implements SchemaInterface
 {
 
-	protected $type;
-	protected $data    = [];
-	public    $context = null;
+	protected string|array $type;
+	protected array        $props   = [];
+	public    ?string      $context = null;
 
 
-	public function __construct(string $type, array $data = [])
+	public function __construct(string $type, array $props = [])
 	{
-		$this->data = $data;
-		$this->type = $type;
+		$this->type  = $type;
+		$this->props = $props;
 	}
 
 	public function __get(string $name)
 	{
-		return $this->data[$name] ?? null;
+		return $this->props[$name] ?? null;
 	}
-
 
 	public function __set(string $name, $value)
 	{
-		$this->data[$name] = $value;
+		$this->props[$name] = $value;
 	}
 
 	public function jsonSerialize(): array
 	{
 		$data = [
-			'@type' => $this->type,
-			'@context' => $this->context ?? "https://schema.org/",
+			'@type'    => $this->type,
+			'@context' => $this->context ?? "https://schema.org",
 		];
 
-		return array_merge($this->data, $data);
+		return array_merge($this->props, $data);
 	}
 
 	public function __toString(): string

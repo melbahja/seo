@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Melbahja\Seo;
 
+use PHPUnit\Framework\TestCase;
 use Melbahja\Seo\Robots;
 
 class RobotsTest extends TestCase
