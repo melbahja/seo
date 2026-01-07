@@ -3,11 +3,13 @@
 ## v3 - Jan/2026
 
 ### Breaking Changes:
-* [Robots] [CHANGED] `bot()` method changed to `addRule()` - params structure is different
-* [Robots] [CHANGED] `sitemap()` method renamed to `addSitemap()`
-* [Robots] [CHANGED] `delay` array key renamed to `crawlDelay`
-* [Robots] [  NEW  ] `addComment()` - adds comments to robots.txt
-* [Robots] [  NEW  ] `saveTo()` - saves to file
-* [Robots] [  NEW  ] Implements `Stringable` interface
-* [Robots] [REMOVED] Robots copyrights header removed
+* [  Robots  ] [CHANGED] `bot()` method changed to `addRule()` - params structure is different
+* [  Robots  ] [CHANGED] `sitemap()` method renamed to `addSitemap()`
+* [  Robots  ] [CHANGED] `delay` array key renamed to `crawlDelay`
+* [  Robots  ] [  NEW  ] `addComment()` - adds comments to robots.txt
+* [  Robots  ] [  NEW  ] `saveTo()` - saves to file
+* [  Robots  ] [  NEW  ] Implements `Stringable` interface
+* [  Robots  ] [REMOVED] Robots copyrights header removed
+* [ Indexing ] [REMOVED] Sitemap Ping class, /ping?sitemap deprecated/removed by major search engines.
+* [ Indexing ] [CHANGED] Refactored indexer classes!
 
