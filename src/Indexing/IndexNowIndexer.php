@@ -1,88 +1,119 @@
 <?php
 namespace Melbahja\Seo\Indexing;
 
+use \RuntimeException;
+use \InvalidArgumentException;
+use Melbahja\Utils\HttpClient;
 use Melbahja\Seo\Interfaces\SeoInterface;
 
 /**
  * @package Melbahja\Seo
- * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
  * @copyright Mohamed Elabhja
  */
-class IndexNowIndexer implements SeoInterface
+class IndexNowIndexer
 {
+	private string $apiKey;
+	private HttpClient $httpClient;
 
-	/**
-	 * website hostname.
-	 * @var string
-	 */
-	protected $host;
-
-	/**
-	 * Engines api keys.
-	 * @var array
-	 */
-	protected $keys = [];
-
-	/**
-	 * Initialize indexer.
-	 * @param string $host
-	 * @param array  $keys
-	 */
-	public function __construct(string $host, array $keys)
+	public function __construct(string $apiKey, ?HttpClient $httpClient = null)
 	{
-		$this->host = $host;
-		$this->keys = $keys;
-	}
-
-	/**
-	 * Instant index single url.
-	 *
-	 * @param  string $url
-	 * @return array
-	 */
-	public function indexUrl(string $url): array
-	{
-		return $this->indexUrls([$url]);
-	}
-
-	/**
-	 * Instant index multiple urls.
-	 *
-	 * @param  array  $urls
-	 * @return array
-	 */
-	public function indexUrls(array $urls): array
-	{
-		$accepted = [];
-
-		foreach($this->keys as $engine => $key)
-		{
-			$accepted[$engine] = $this->index($engine, $key, $urls);
+		if (empty($apiKey)) {
+			throw new InvalidArgumentException('API key cannot be empty');
 		}
 
-		return $accepted;
+		$this->apiKey     = $apiKey;
+		$this->httpClient = $httpClient ?? new HttpClient();
 	}
 
 	/**
-	 * Send index request to search engine.
+	 * Submit a single URL to $engine for indexing
 	 *
-	 * @param  string $engine
-	 * @param  string $apiKey
-	 * @param  array  $urls
-	 * @return bool
+	 * @param string $url The URL to submit for indexing
+	 * @param IndexNowEngine|null $engine The search engine to notify defaults to indexnow all supported engines
+	 * @param URLIndexingType $type The type of indexing operation not needed now y can just send new or 404 urls
+	 * @return bool true on successful, false on failure.
 	 */
-	protected function index(string $engine, string $apiKey, array $urls): bool
+	public function submitUrl(string $url, ?IndexNowEngine $engine = null, URLIndexingType $type = URLIndexingType::UPDATE): bool
 	{
-		$ch = curl_init("https://{$engine}/indexnow");
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(['host' => $this->host, 'key' => $apiKey, 'urlList' => $urls]));
-		curl_setopt($ch, CURLOPT_HTTPHEADER, ['content-type: application/json']);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_exec($ch);
-		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
+		$engine = $engine ?? IndexNowEngine::INDEXNOW;
 
-		return $code >= 200 && $code < 300;
+		return $this->sendRequest($engine->toUrl($url, $this->apiKey));
+	}
+
+	/**
+	 * Submit multiple URLs to $engine for indexing
+	 *
+	 * @param array $urls Array of URLs to submit for indexing
+	 * @param IndexNowEngine|null $engine The search engine to notify defaults to indexnow all supported engines
+	 * @param URLIndexingType $type The type of indexing operation not needed now y can just send new or 404 urls
+	 * @return array associative, URLs as keys and values as bool success state
+	 */
+	public function submitUrls(array $urls, ?IndexNowEngine $engine = null, URLIndexingType $type = URLIndexingType::UPDATE): array
+	{
+		$results = [];
+		foreach ($urls as $url)
+		{
+			$results[$url] = $this->submitUrl($url, $engine, $type);
+		}
+
+		return $results;
+	}
+
+	/**
+	 * Serve the IndexNow verification key file
+	 *
+	 * This method handles requests to /{api-key}.txt and returns the key for domain verification.
+	 * Returns 404 if the requested path doesn't match the expected key file path.
+	 *
+	 * @return never This method always exits and terminates runtime.
+	 */
+	public function serveKeyFile(): never
+	{
+		$uri = strtok($_SERVER['REQUEST_URI'] ?? '', '?');
+		$exp = '/' . $this->apiKey . '.txt';
+
+		// Ignore/404 invalid attempts or revoked keys.
+		if ($uri !== $exp) {
+
+			http_response_code(404);
+			header('Content-Type: text/plain');
+			echo 'Key file not found';
+			exit;
+		}
+
+		header('Content-Type: text/plain');
+		header('Cache-Control: no-cache, no-store, must-revalidate');
+		echo $this->apiKey;
+		exit;
+	}
+
+	/**
+	 * Send the request to indexnow API
+	 *
+	 * @param string $url The API URL to send the request
+	 * @return bool assumes sucess if status is less than 400, false otherwise
+	 */
+	private function sendRequest(string $url): bool
+	{
+		$this->httpClient->request('GET', $url);
+		return $this->httpClient->getStatusCode() < 400;
+	}
+
+	/**
+	 * Create an IndexNowIndexer instance from environment variable
+	 *
+	 * @param string $envVar The name of the env var of the API key, INDEXNOW_API_KEY by default.
+	 * @return self New IndexNowIndexer instance
+	 * @throws RuntimeException If the environment variable is not set or empty
+	 */
+	public static function fromEnvironment(string $envVar = 'INDEXNOW_API_KEY'): self
+	{
+		if (!($key = $_ENV[$envVar] ?? getenv($envVar))) {
+			throw new RuntimeException("IndexNow API key not found in env var: {$envVar}");
+		}
+
+		return new self($key);
 	}
 }
