@@ -5,8 +5,8 @@ namespace Melbahja\Seo\Schema;
 /**
  * @package Melbahja\Seo
  * @see https://git.io/phpseo
- * @see https://schema.org/Product
+ * @see https://schema.org/ProductGroup
  * @license MIT
  * @copyright Mohamed Elabhja
  */
-class Product extends Thing { }
+class ProductGroup extends Thing { }

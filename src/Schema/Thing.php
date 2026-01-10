@@ -6,7 +6,6 @@ use Melbahja\Seo\Interfaces\SchemaInterface;
 
 /**
  * @package Melbahja\Seo
- * @since v2.0
  * @see https://git.io/phpseo
  * @see https://schema.org/Thing
  * @license MIT
@@ -15,15 +14,21 @@ use Melbahja\Seo\Interfaces\SchemaInterface;
 class Thing implements SchemaInterface
 {
 
-	protected string|array $type;
-	protected array        $props   = [];
-	public    ?string      $context = null;
+	public function __construct(
+		protected array $props             = [],
+		protected string|array|null $type  = null,
+		protected ?string $id              = null,
+		protected ?string $context         = null
+	) {
 
+		if ($this->id !== null) {
+			$this->props['@id']  = $this->id;
+		}
 
-	public function __construct(string $type, array $props = [])
-	{
-		$this->type  = $type;
-		$this->props = $props;
+		if (empty($this->type)) {
+			$parts = explode("\\", static::class);
+			$this->type = end($parts);
+		}
 	}
 
 	public function __get(string $name)
@@ -38,12 +43,11 @@ class Thing implements SchemaInterface
 
 	public function jsonSerialize(): array
 	{
-		$data = [
+		return array_merge($this->props,
+		[
 			'@type'    => $this->type,
 			'@context' => $this->context ?? "https://schema.org",
-		];
-
-		return array_merge($this->props, $data);
+		]);
 	}
 
 	public function __toString(): string

@@ -6,8 +6,8 @@ use Melbahja\Seo\Schema\Place;
 /**
  * @package Melbahja\Seo
  * @see https://git.io/phpseo
- * @see https://schema.org/LocalBusiness
+ * @see https://schema.org/Store
  * @license MIT
  * @copyright Mohamed Elabhja
  */
-class LocalBusiness extends Place { }
+class Store extends Place { }

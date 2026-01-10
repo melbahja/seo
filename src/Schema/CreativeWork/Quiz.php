@@ -5,13 +5,9 @@ use Melbahja\Seo\Schema\CreativeWork;
 
 /**
  * @package Melbahja\Seo
- * @since v2.0
  * @see https://git.io/phpseo
- * @see https://schema.org/Question
+ * @see https://schema.org/Quiz
  * @license MIT
  * @copyright Mohamed Elabhja
  */
-class Question extends CreativeWork
-{
-	protected array|string $type = "Question";
-}
+class Quiz extends CreativeWork { }

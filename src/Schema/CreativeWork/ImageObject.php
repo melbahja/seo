@@ -1,16 +1,13 @@
 <?php
 namespace Melbahja\Seo\Schema\CreativeWork;
 
+use Melbahja\Seo\Schema\CreativeWork;
 
 /**
  * @package Melbahja\Seo
- * @since v2.0
  * @see https://git.io/phpseo
- * @see https://schema.org/MediaObject
+ * @see https://schema.org/ImageObject
  * @license MIT
  * @copyright Mohamed Elabhja
  */
-class MediaObject extends MediaObject
-{
-	protected array|string $type = "MediaObject";
-}
+class ImageObject extends CreativeWork { }
