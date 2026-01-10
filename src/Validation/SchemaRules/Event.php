@@ -1,36 +1,27 @@
 <?php
 
-//
-// location, startDate, name are required
-//
 return [
+	'location' => [
+		'type' => '@Place|@Thing',
+		'required' => true,
+	],
 	'name' => [
 		'type' => 'string',
 		'required' => true,
 	],
 	'startDate' => [
-		'type' => 'iso_date',
+		'type' => 'string',
 		'required' => true,
 	],
-	'location' => [
-		'type' => '\Melbahja\Seo\Schema\Place|\Melbahja\Seo\Schema\Intangible\VirtualLocation',
-		'required' => true,
-	],
-	'endDate' => 'iso_date',
-	'eventStatus' => 'string',
-	'eventAttendanceMode' => 'string',
 	'description' => 'string',
-	'offers' => [
-		'type' => '\Melbahja\Seo\Schema\Intangible\Offer|array',
-		'item_type' => '\Melbahja\Seo\Schema\Intangible\Offer',
-	],
-	'performer' => [
-		'type' => '\Melbahja\Seo\Schema\Person|\Melbahja\Seo\Schema\Organization|array',
-		'item_type' => '\Melbahja\Seo\Schema\Person|\Melbahja\Seo\Schema\Organization',
-	],
-	'organizer' => '\Melbahja\Seo\Schema\Person|\Melbahja\Seo\Schema\Organization',
+	'endDate' => 'string',
+	'eventStatus' => 'string',
 	'image' => [
-		'type' => 'string|array',
-		'item_type' => 'string',
+		'type' => 'array|url|@ImageObject',
+		'item_type' => 'url|@ImageObject',
 	],
+	'offers' => '@Thing',
+	'organizer' => '@Organization|@Person',
+	'performer' => '@Person|@Organization',
+	'previousStartDate' => 'string',
 ];

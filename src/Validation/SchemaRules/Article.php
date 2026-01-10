@@ -3,14 +3,13 @@
 return [
 	'headline' => 'string',
 	'image' => [
-		'type' => 'string|array',
-		'item_type' => 'string',
+		'type' => 'array|url|@ImageObject',
+		'item_type' => 'url|@ImageObject',
 	],
 	'datePublished' => 'iso_date',
 	'dateModified' => 'iso_date',
 	'author' => [
-		'type' => '\Melbahja\Seo\Schema\Person|\Melbahja\Seo\Schema\Organization|array',
-		'item_type' => '\Melbahja\Seo\Schema\Person|\Melbahja\Seo\Schema\Organization',
+		'type' => 'array|@Person|@Organization',
+		'item_type' => '@Person|@Organization',
 	],
-	'publisher' => '\Melbahja\Seo\Schema\Organization',
 ];

@@ -2,8 +2,8 @@
 
 return [
 	'mainEntity' => [
-		'type' => 'array',
-		'item_type' => '\Melbahja\Seo\Schema\CreativeWork\Question',
+		'type' => 'array|@Thing',
+		'item_type' => '@Thing',
 		'required' => true,
 	],
 ];

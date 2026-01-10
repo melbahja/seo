@@ -1,21 +1,19 @@
 <?php
 
-//
-// TODO: required_if
-//
 return [
 	'name' => [
 		'type' => 'string',
 		'required' => true,
 	],
 	'offers' => [
-		'type' => '\Melbahja\Seo\Schema\Intangible\Offer|\Melbahja\Seo\Schema\Intangible\AggregateOffer',
+		'type' => '@Thing|array',
+		'item_type' => '@Thing',
 		'required' => true,
 	],
-	'aggregateRating' => '\Melbahja\Seo\Schema\Intangible\AggregateRating',
+	'aggregateRating' => '@AggregateRating',
 	'review' => [
-		'type' => '\Melbahja\Seo\Schema\CreativeWork\Review|array',
-		'item_type' => '\Melbahja\Seo\Schema\CreativeWork\Review',
+		'type' => '@Review|array',
+		'item_type' => '@Review',
 	],
 	'applicationCategory' => 'string',
 	'operatingSystem' => 'string',

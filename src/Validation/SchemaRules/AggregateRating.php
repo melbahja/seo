@@ -1,19 +1,16 @@
 <?php
 
 return [
+	'itemReviewed' => [
+		'type' => '@Thing',
+		'required' => true,
+	],
 	'ratingValue' => [
-		'type' => 'float',
+		'type' => 'string|int|float',
 		'required' => true,
 	],
-	'ratingCount' => [
-		'type' => 'int',
-		'required' => true,
-	],
-	'reviewCount' => [
-		'type' => 'int',
-		'required' => true,
-	],
-	'itemReviewed' => '\Melbahja\Seo\Schema\Thing',
-	'bestRating' => 'float',
-	'worstRating' => 'float',
+	'ratingCount' => 'int',
+	'reviewCount' => 'int',
+	'bestRating' => 'string|int|float',
+	'worstRating' => 'string|int|float',
 ];

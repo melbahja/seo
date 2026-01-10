@@ -1,14 +1,13 @@
 <?php
 
-// TODO: add QuantitativeValue
 return [
 	'name' => 'string',
 	'url' => 'url',
 	'logo' => 'string',
-	'address' => '\Melbahja\Seo\Schema\Intangible\PostalAddress',
+	'address' => '@PostalAddress',
 	'contactPoint' => [
-		'type' => '\Melbahja\Seo\Schema\Intangible\ContactPoint|array',
-		'item_type' => '\Melbahja\Seo\Schema\Intangible\ContactPoint',
+		'type' => 'array|@Thing',
+		'item_type' => '@Thing',
 	],
 	'sameAs' => [
 		'type' => 'string|array',
@@ -18,5 +17,5 @@ return [
 	'email' => 'email',
 	'telephone' => 'string',
 	'foundingDate' => 'iso_date',
-	'numberOfEmployees' => '\Melbahja\Seo\Schema\Intangible\QuantitativeValue',
+	'numberOfEmployees' => '@Thing',
 ];

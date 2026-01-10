@@ -1,14 +1,13 @@
 <?php
 
 // TODO: required_if
-
 return [
 	'author' => [
-		'type' => '\Melbahja\Seo\Schema\Person|\Melbahja\Seo\Schema\Organization',
+		'type' => '@Person|@Organization',
 		'required' => true,
 	],
 	'reviewRating' => [
-		'type' => '\Melbahja\Seo\Schema\Intangible\Rating',
+		'type' => '\Melbahja\Seo\Schema\Thing',
 		'required' => true,
 	],
 	'itemReviewed' => '\Melbahja\Seo\Schema\Thing',

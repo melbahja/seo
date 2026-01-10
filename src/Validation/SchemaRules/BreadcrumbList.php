@@ -2,8 +2,8 @@
 
 return [
 	'itemListElement' => [
-		'type' => 'array',
-		'item_type' => '\Melbahja\Seo\Schema\Intangible\ListItem',
+		'type' => 'array|@ListItem',
+		'item_type' => '@ListItem',
 		'required' => true,
 	],
 ];

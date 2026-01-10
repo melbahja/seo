@@ -1,28 +1,15 @@
 <?php
 
-// TODO: add BroadcastEvent, Clip
 return [
-	'name' => [
-		'type' => 'string',
-		'required' => true,
-	],
+	'name' => 'string',
+	'description' => 'string',
 	'thumbnailUrl' => [
-		'type' => 'string|array',
-		'item_type' => 'string',
-		'required' => true,
-	],
-	'uploadDate' => [
-		'type' => 'iso_date',
-		'required' => true,
+		'type' => 'array|url',
+		'item_type' => 'url',
 	],
 	'contentUrl' => 'url',
-	'description' => 'string',
-	'duration' => 'string',
 	'embedUrl' => 'url',
+	'uploadDate' => 'iso_date',
+	'duration' => 'string',
 	'expires' => 'iso_date',
-	'hasPart' => [
-		'type' => '\Melbahja\Seo\Schema\CreativeWork\Clip|array',
-		'item_type' => '\Melbahja\Seo\Schema\CreativeWork\Clip',
-	],
-	'publication' => '\Melbahja\Seo\Schema\CreativeWork\BroadcastEvent',
 ];

@@ -1,27 +1,42 @@
 <?php
 
 return [
-	'name' => [
-		'type' => 'string',
-		'required' => true,
-	],
 	'description' => [
 		'type' => 'string',
 		'required' => true,
 	],
-	'creator' => '\Melbahja\Seo\Schema\Person|\Melbahja\Seo\Schema\Organization',
-	'license' => 'string',
-	'url' => 'url',
-	'identifier' => 'string',
-	'keywords' => [
-		'type' => 'string|array',
-		'item_type' => 'string',
+	'name' => [
+		'type' => 'string',
+		'required' => true,
 	],
-	'variableMeasured' => [
-		'type' => 'string|array',
-		'item_type' => 'string',
+	'alternateName' => 'string',
+	'creator' => [
+		'type' => '@Person|@Organization|array',
+		'item_type' => '@Person|@Organization',
 	],
+	'citation' => 'string|@CreativeWork',
+	'funder' => [
+		'type' => '@Person|@Organization|array',
+		'item_type' => '@Person|@Organization',
+	],
+	'hasPart' => [
+		'type' => 'array|@Dataset',
+		'item_type' => '@Dataset',
+	],
+	'isPartOf' => 'url|@Dataset',
+	'identifier' => 'url|string|@Thing',
+	'isAccessibleForFree' => 'bool',
+	'keywords' => 'string',
+	'license' => 'url|@CreativeWork',
+	'measurementTechnique' => 'string|url',
+	'sameAs' => 'url',
+	'spatialCoverage' => 'string|@Place',
 	'temporalCoverage' => 'string',
-	'spatialCoverage' => '\Melbahja\Seo\Schema\Place|string',
-	'version' => 'string',
+	'variableMeasured' => 'string|@Thing',
+	'version' => 'string|int|float',
+	'url' => 'url',
+	'distribution' => [
+		'type' => 'array|@Thing',
+		'item_type' => '@Thing',
+	],
 ];

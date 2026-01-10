@@ -2,21 +2,18 @@
 
 return [
 	'itemReviewed' => [
-		'type' => '\Melbahja\Seo\Schema\Organization',
+		'type' => '@Organization',
 		'required' => true,
 	],
 	'ratingValue' => [
-		'type' => 'float',
+		'type' => 'string|int|float',
 		'required' => true,
 	],
 	'ratingCount' => [
 		'type' => 'int',
 		'required' => true,
 	],
-	'reviewCount' => [
-		'type' => 'int',
-		'required' => true,
-	],
-	'bestRating' => 'float',
-	'worstRating' => 'float',
+	'reviewCount' => 'int',
+	'bestRating' => 'int',
+	'worstRating' => 'int',
 ];

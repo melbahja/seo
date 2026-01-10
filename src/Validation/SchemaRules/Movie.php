@@ -13,8 +13,11 @@ return [
 		'type' => 'array|url|@ImageObject',
 		'item_type' => 'url|@ImageObject',
 	],
-	'telephone' => 'string',
-	'priceRange' => 'string',
-	'address' => '@PostalAddress',
+	'dateCreated' => 'iso_date',
+	'director' => [
+		'type' => 'array|@Person',
+		'item_type' => '@Person',
+	],
+	'review' => '@Review',
 	'aggregateRating' => '@AggregateRating',
 ];

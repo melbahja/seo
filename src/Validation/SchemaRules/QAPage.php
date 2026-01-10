@@ -2,7 +2,7 @@
 
 return [
 	'mainEntity' => [
-		'type' => '\Melbahja\Seo\Schema\CreativeWork\Question',
+		'type' => '@Thing',
 		'required' => true,
 	],
 ];

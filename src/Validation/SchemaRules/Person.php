@@ -6,7 +6,7 @@ return [
 		'required' => true,
 	],
 	'url' => 'url',
-	'image' => 'string',
+	'image' => 'string|@ImageObject',
 	'sameAs' => [
 		'type' => 'string|array',
 		'item_type' => 'string',
@@ -14,3 +14,4 @@ return [
 	'description' => 'string',
 	'jobTitle' => 'string',
 ];
+

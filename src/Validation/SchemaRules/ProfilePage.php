@@ -2,7 +2,7 @@
 
 return [
 	'mainEntity' => [
-		'type' => '\Melbahja\Seo\Schema\Person|\Melbahja\Seo\Schema\Organization',
+		'type' => '@Person|@Organization',
 		'required' => true,
 	],
 	'dateCreated' => 'iso_date',

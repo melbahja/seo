@@ -1,10 +1,9 @@
 <?php
 
 return [
-	'ratingValue' => [
-		'type' => 'float',
-		'required' => true,
-	],
-	'bestRating' => 'float',
-	'worstRating' => 'float',
+	'alternateName' => 'string',
+	'bestRating' => 'int',
+	'name' => 'string',
+	'ratingValue' => 'int',
+	'worstRating' => 'int',
 ];

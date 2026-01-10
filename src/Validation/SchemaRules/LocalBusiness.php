@@ -1,33 +1,39 @@
 <?php
 
-//
-// name and address are required
-//
-
 return [
 	'name' => [
 		'type' => 'string',
 		'required' => true,
 	],
 	'address' => [
-		'type' => '\Melbahja\Seo\Schema\Intangible\PostalAddress',
+		'type' => '@PostalAddress',
 		'required' => true,
 	],
-	'url' => 'url',
 	'telephone' => 'string',
 	'priceRange' => 'string',
 	'openingHoursSpecification' => [
-		'type' => 'array',
-		'item_type' => '\Melbahja\Seo\Schema\Intangible\OpeningHoursSpecification',
+		'type' => 'array|@Thing',
+		'item_type' => '@Thing',
+		'rules' => [
+			'dayOfWeek' => [
+				'type'      => 'string|array',
+				'item_type' => 'string',
+			],
+			'opens' => 'string',
+			'closes' => 'string',
+		],
 	],
-	'aggregateRating' => '\Melbahja\Seo\Schema\Intangible\AggregateRating',
-	'review' => [
-		'type' => 'array',
-		'item_type' => '\Melbahja\Seo\Schema\CreativeWork\Review',
+	'geo' => [
+		'type' => '@Thing',
+		'rules' => [
+			'latitude' => 'float|int',
+			'longitude' => 'float|int',
+		],
 	],
-	'geo' => '\Melbahja\Seo\Schema\Intangible\GeoCoordinates',
-	'servesCuisine' => [
-		'type' => 'string|array',
-		'item_type' => 'string',
+	'url' => 'url',
+	'sameAs' => [
+		'type'      => 'array|url',
+		'item_type' => 'url',
 	],
+	'image' => 'url|@ImageObject',
 ];
