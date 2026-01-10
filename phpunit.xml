@@ -7,14 +7,14 @@
 	cacheResult="false"
 	cacheDirectory=".phpunit.cache"
 >
-  <testsuites>
-	<testsuite name="SEO Tests">
-	  <directory suffix=".php">tests</directory>
-	</testsuite>
-  </testsuites>
-  <source>
-	<include>
-	  <directory suffix=".php">src</directory>
-	</include>
-  </source>
+	<testsuites>
+		<testsuite name="SEO Tests">
+			<directory suffix=".php">tests</directory>
+		</testsuite>
+	</testsuites>
+	<source>
+		<include>
+			<directory suffix=".php">src</directory>
+		</include>
+	</source>
 </phpunit>
