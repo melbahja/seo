@@ -8,7 +8,4 @@ namespace Melbahja\Seo\Interfaces;
  * @license MIT
  * @copyright Mohamed Elabhja
  */
-interface SchemaInterface extends SeoInterface, \JsonSerializable
-{
-	public function __toString(): string;
-}
+interface SchemaInterface extends SeoInterface, \JsonSerializable, \Stringable { }
