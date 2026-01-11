@@ -9,7 +9,7 @@ class RobotsTest extends TestCase
 	public function testBasicRule()
 	{
 		$robots = new Robots();
-		$robots->addRule('*', ['/admin'], ['/public']);
+		$robots->addRule('*', disallow: ['/admin'], allow: ['/public']);
 
 		$expected = "User-agent: *\r\nDisallow: /admin\r\nAllow: /public\r\n\r\n";
 		$this->assertEquals($expected, (string) $robots);
@@ -18,7 +18,7 @@ class RobotsTest extends TestCase
 	public function testMultipleRules()
 	{
 		$robots = new Robots();
-		$robots->addRule('*', ['/private', '/admin'], ['/', '/public'], 5);
+		$robots->addRule(userAgent: '*', disallow: ['/private', '/admin'], allow: ['/', '/public'], crawlDelay: 5);
 		$robots->addRule('googlebot', [], [], 1);
 
 		$expected = "User-agent: *\r\nDisallow: /private\r\nDisallow: /admin\r\nAllow: /\r\nAllow: /public\r\nCrawl-delay: 5\r\n\r\nUser-agent: googlebot\r\nCrawl-delay: 1\r\n\r\n";
