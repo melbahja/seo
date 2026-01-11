@@ -1,12 +1,12 @@
 <?php
 namespace Melbahja\Seo;
 
-use Melbahja\Seo\Interfaces\SeoInterface;
 use Melbahja\Seo\Utils\Utils;
+use Melbahja\Seo\Interfaces\SeoInterface;
+use Melbahja\Seo\Interfaces\SchemaInterface;
 
 /**
  * @package Melbahja\Seo
- * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
  * @copyright Mohamed Elabhja
@@ -14,44 +14,63 @@ use Melbahja\Seo\Utils\Utils;
 class MetaTags implements SeoInterface
 {
 	/**
-	 * Generated tags
-	 * @var array
-	 */
-	protected $tags = [];
-
-	/**
-	 * Twitter tags.
-	 * @var array
-	 */
-	protected $twitterTags = [];
-
-
-	/**
-	 * Open Graph tags.
-	 * @var array
-	 */
-	protected $openGraphTags = [];
-
-	/**
 	 * Page title
 	 * @var string
 	 */
-	public $title = null;
+	public ?string $title = null;
+
+	/**
+	 * Meta tags
+	 * @var array
+	 */
+	protected array $tags = [];
+
+	/**
+	 * Schema object to be included
+	 * @var SchemaInterface
+	 */
+	protected ?SchemaInterface $schema = null;
 
 	/**
 	 * Initiablize new meta tags builder
 	 *
 	 * @param array $tags
 	 */
-	public function __construct(array $tags = [])
+	public function __construct(array $meta = [], array $og = [], array $twitter = [])
 	{
-		foreach ($tags as $k => $v)
+		foreach ($meta as $k => $v)
 		{
-			if (method_exists(static::class, $k)) {
+			if (is_array($v)) {
+
+				foreach ($v as $kk => $vv)
+				{
+					if (method_exists($this, $k)) {
+						$this->$k($kk, $vv);
+						continue;
+					}
+
+					$this->push($k, $vv);
+				}
+
+				continue;
+			}
+
+			if (method_exists($this, $k)) {
 				$this->$k($v);
 				continue;
 			}
-			$this->meta($k, $v);
+
+			$this->push('meta', ['name' => $k, 'content' => $v]);
+		}
+
+		foreach ($og as $k => $v)
+		{
+			$this->og($k, $v);
+		}
+
+		foreach ($twitter as $k => $v)
+		{
+			$this->twitter($k, $v);
 		}
 	}
 
@@ -60,20 +79,20 @@ class MetaTags implements SeoInterface
 	 * Set page and meta title
 	 *
 	 * @param  string $title
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function title(string $title): MetaTags
+	public function title(string $title): self
 	{
-		$this->title = Utils::escape($title);
+		$this->title = $title;
 		return $this->meta('title', $title)->og('title', $title)->twitter('title', $title);
 	}
 
 	/**
 	 * Set page description.
 	 * @param  string $desc
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function description(string $desc): MetaTags
+	public function description(string $desc): self
 	{
 		return $this->meta('description', $desc)->og('description', $desc)->twitter('description', $desc);
 	}
@@ -82,9 +101,9 @@ class MetaTags implements SeoInterface
 	 * Set a mobile link (Http header "Vary: User-Agent" is required)
 	 *
 	 * @param  string $url
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function mobile(string $url): MetaTags
+	public function mobile(string $url): self
 	{
 		return $this->push('link', [
 			'href' => $url,
@@ -94,24 +113,64 @@ class MetaTags implements SeoInterface
 	}
 
 	/**
-	 * Set robots meta tags.
+	 * Set robots meta tags
 	 *
-	 * @param  string $options For example: follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large
-	 * @param  string $botName bot name or robots for all.
-	 * @return MetaTags
+	 * @param string|array $options index,follow OR ['index', 'follow', 'max-snippet' => -1]
+	 * @param string $botName robots|googlebot|bingbot|etc
+	 * @return self
 	 */
-	public function robots(string $options, string $botName = 'robots'): MetaTags
+	public function robots(string|array $options, string $botName = 'robots'): self
 	{
+		if (is_array($options)) {
+
+			$parts = [];
+			foreach ($options as $k => $v)
+			{
+				$parts[] = is_int($k) ? $v : "{$k}:{$v}";
+			}
+			$options = implode(', ', $parts);
+		}
+
 		return $this->meta($botName, $options);
+	}
+
+	/**
+	 * Set RSS or Atom feed link
+	 *
+	 * @param string $url feed URL
+	 * @param string $type application/rss+xml|application/atom+xml
+	 * @param string|null $title feed title
+	 * @return self
+	 */
+	public function feed(string $url, string $type = 'application/rss+xml', ?string $title = null): self
+	{
+		return $this->push('link', [
+			'rel' => 'alternate',
+			'title' => $title,
+			'type' => $type,
+			'href' => $url,
+		]);
+	}
+
+	/**
+	* Set search engine verification meta tag
+	*
+	* @param string $engine google|bing|yandex|pinterest|etc
+	* @param string $code verification code
+	* @return self
+	*/
+	public function verification(string $engine, string $code): self
+	{
+		return $this->meta("{$engine}-site-verification", $code);
 	}
 
 	/**
 	 * Set AMP link
 	 *
 	 * @param  string $url
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function amp(string $url): MetaTags
+	public function amp(string $url): self
 	{
 		return $this->push('link', [
 			'rel' => 'amphtml',
@@ -123,9 +182,9 @@ class MetaTags implements SeoInterface
 	 * Set canonical url
 	 *
 	 * @param  string $url
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function canonical(string $url): MetaTags
+	public function canonical(string $url): self
 	{
 		return $this->push('link', [
 			'rel' => 'canonical',
@@ -138,9 +197,9 @@ class MetaTags implements SeoInterface
 	 * Set social media url.
 	 *
 	 * @param  string $url
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function url(string $url): MetaTags
+	public function url(string $url): self
 	{
 		return $this->og('url', $url)->twitter('url', $url);
 	}
@@ -150,9 +209,9 @@ class MetaTags implements SeoInterface
 	 *
 	 * @param  string $lang for eg: en
 	 * @param  string $url  alternate language page url.
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function hreflang(string $lang, string $url): MetaTags
+	public function hreflang(string $lang, string $url): self
 	{
 		return $this->push('link', [
 			'rel' => 'alternate',
@@ -162,13 +221,34 @@ class MetaTags implements SeoInterface
 	}
 
 	/**
+	* Set multiple alternate language URLs at once
+	*
+	* @param array $langUrls Associative array of lang => url pairs (e.g., ['en' => 'url', 'fr' => 'url'])
+	* @param string|null $default Optional x-default URL for language fallback
+	* @return self
+	*/
+	public function hreflangs(array $langUrls, ?string $default = null): self
+	{
+		if ($default !== null) {
+			$langUrls['x-default'] = $default;
+		}
+
+		foreach ($langUrls as $lang => $url)
+		{
+			$this->hreflang($lang, $url);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Set a meta tag
 	 *
 	 * @param string $name
 	 * @param string $value
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function meta(string $name, string $value): MetaTags
+	public function meta(string $name, string $value): self
 	{
 		return $this->push('meta', [
 			'name'    => $name,
@@ -181,9 +261,9 @@ class MetaTags implements SeoInterface
 	 *
 	 * @param string $name
 	 * @param array  $attrs
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function push(string $name, array $attrs): MetaTags
+	public function push(string $name, array $attrs): self
 	{
 		foreach ($attrs as $k => $v)
 		{
@@ -199,11 +279,11 @@ class MetaTags implements SeoInterface
 	 *
 	 * @param  string $name
 	 * @param  string $value
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function og(string $name, string $value): MetaTags
+	public function og(string $name, string $value): self
 	{
-		$this->openGraphTags[] = ['meta', ['property' => "og:{$name}", 'content' => $value]];
+		$this->tags[] = ['meta', ['property' => "og:{$name}", 'content' => $value]];
 		return $this;
 	}
 
@@ -213,21 +293,21 @@ class MetaTags implements SeoInterface
 	 *
 	 * @param  string $name
 	 * @param  string $value
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function twitter(string $name, string $value): MetaTags
+	public function twitter(string $name, string $value): self
 	{
-		$this->twitterTags[] = ['meta', ['property' => "twitter:{$name}", 'content' => $value]];
+		$this->tags[] = ['meta', ['property' => "twitter:{$name}", 'content' => $value]];
 		return $this;
 	}
 
 	/**
 	 * Set short link tag
-	 * 
+	 *
 	 * @param  string $url
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function shortlink(string $url): MetaTags
+	public function shortlink(string $url): self
 	{
 		return $this->push('link', [
 			'rel' => 'shortlink',
@@ -240,11 +320,76 @@ class MetaTags implements SeoInterface
 	 *
 	 * @param  string $url
 	 * @param  string $card Twitter card
-	 * @return MetaTags
+	 * @return self
 	 */
-	public function image(string $url, string $card = 'summary_large_image'): MetaTags
+	public function image(string $url, string $card = 'summary_large_image'): self
 	{
 		return $this->og('image', $url)->twitter('card', $card)->twitter('image', $url);
+	}
+
+	/**
+	* Set article metadata
+	*
+	* @param string $published Article published time
+	* @param string|null $modified Article modified time
+	* @param string|null $author Article author
+	* @return self
+	*/
+	public function articleMeta(string $published, ?string $modified = null, ?string $author = null): self
+	{
+		$this->og('article:published_time', $published);
+
+		if ($modified) {
+			$this->og('article:modified_time', $modified);
+		}
+
+		if ($author) {
+			$this->og('article:author', $author);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set pagination links
+	 *
+	 * @param string|null $prev previous page URL
+	 * @param string|null $next next page URL
+	 * @param string|null $first first page URL (optional)
+	 * @param string|null $last last page URL (optional)
+	 * @return self
+	 */
+	public function pagination(?string $prev = null, ?string $next = null, ?string $first = null, ?string $last = null): self
+	{
+		if ($prev) {
+			$this->push('link', ['rel' => 'prev', 'href' => $prev]);
+		}
+
+		if ($next) {
+			$this->push('link', ['rel' => 'next', 'href' => $next]);
+		}
+
+		if ($first) {
+			$this->push('link', ['rel' => 'first', 'href' => $first]);
+		}
+
+		if ($last) {
+			$this->push('link', ['rel' => 'last', 'href' => $last]);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Add Schema objects to be rendered with metatags
+	 *
+	 * @param  SchemaInterface $schema Any Schema object
+	 * @return self
+	 */
+	public function schema(SchemaInterface $schema): self
+	{
+		$this->schema = $schema;
+		return $this;
 	}
 
 	/**
@@ -255,18 +400,60 @@ class MetaTags implements SeoInterface
 	 */
 	public function build(array $tags): string
 	{
-		$out = '';
+		// Sort tags for nice readability
+		usort($tags, function($a, $b)
+		{
+			$getType = function($tag)
+			{
+				if (isset($tag[1]['property'])) {
 
+					if (str_starts_with($tag[1]['property'], 'og:')) {
+						return 3;
+					}
+
+					if (str_starts_with($tag[1]['property'], 'twitter:')) {
+						return 4;
+					}
+				}
+
+				if ($tag[0] === 'meta') {
+					return 1;
+				}
+
+				if ($tag[0] === 'link') {
+					return 2;
+				}
+
+				return 5;
+			};
+
+			return $getType($a) <=> $getType($b);
+		});
+
+		$out = '';
 		foreach ($tags as $tag)
 		{
 			$out .= "\n<{$tag[0]} ";
 
 			foreach ($tag[1] as $a => $v)
 			{
+				// empty values will be skipped.
+				if (!$v) {
+					continue;
+				}
+
+				// attrs values are escaped to avoid XSS attacks, but attrs names MUST be trusted!
+				// if you trust your users to set arbitary meta attr names that a STUPID idea, but
+				// anyway I did a small replace to avid common XSS chars that may hack you!
+				$a = str_replace(['"', "'", '<', '>', ' ', "\t", "\n", "\r"], '', $a);
 				$out .= $a .'="'. Utils::escape($v) .'" ';
 			}
 
 			$out .= "/>";
+		}
+
+		if ($this->schema !== null) {
+			$out .= (string) $this->schema;
 		}
 
 		return $out;
@@ -282,9 +469,10 @@ class MetaTags implements SeoInterface
 	{
 		$title = '';
 		if ($this->title !== null) {
-			$title = "<title>{$this->title}</title>";
+			$title = Utils::escape($this->title);
+			$title = "<title>{$title}</title>";
 		}
 
-		return $title . $this->build($this->tags) . $this->build($this->twitterTags) . $this->build($this->openGraphTags) ;
+		return $title . $this->build($this->tags);
 	}
 }
