@@ -86,7 +86,7 @@ class SitemapsTest extends TestCase
 			$builder->loc('/blog/post-1')->priority(0.8);
 			$builder->loc('/blog/post-2')->priority(0.7);
 
-			exit("This function/generator MUST not be called");
+			exit("ERROR: This function/generator MUST not be called");
 		});
 
 		$xml = $sitemap->render();
@@ -420,6 +420,8 @@ class SitemapsTest extends TestCase
 			$url->image('/image.jpg', ['title' => 'Test Image']);
 
 			$builder->addItem($url);
+
+			$builder->addItem(new SitemapUrl(url: "https://world.example.com/another_ref.xml"));
 		});
 
 		$this->assertTrue($sitemap->render());
@@ -430,6 +432,7 @@ class SitemapsTest extends TestCase
 		$this->assertStringContainsString('<priority>0.9</priority>', $content);
 		$this->assertStringContainsString('<changefreq>weekly</changefreq>', $content);
 		$this->assertStringContainsString('<image:title>Test Image</image:title>', $content);
+		$this->assertStringContainsString('<loc>https://world.example.com/another_ref.xml</loc>', $content);
 	}
 
 	public function testCDataAutoDetection()
@@ -575,7 +578,7 @@ class SitemapsTest extends TestCase
 
 		$sitemap->links(['name' => 'large.xml'], function(LinksBuilder $builder)
 		{
-			for ($i = 0; $i < 10000; $i++)
+			for ($i = 0; $i < 20000; $i++)
 			{
 				$builder->loc("/page-{$i}")->priority(0.5);
 			}
@@ -586,7 +589,7 @@ class SitemapsTest extends TestCase
 
 		$content = file_get_contents($this->testDir . '/large.xml');
 		$this->assertStringContainsString('/page-0', $content);
-		$this->assertStringContainsString('/page-9999', $content);
+		$this->assertStringContainsString('/page-19999', $content);
 	}
 
 	public function testGeneratorDataSource()
@@ -1215,12 +1218,12 @@ class SitemapsTest extends TestCase
 				for ($i = 0; $i < 50; $i++)
 				{
 					$item = new SitemapUrl(
-						url: "/article-موتسيبي-{$i}?param=value&lang=ar",
+						url: "/article-بالعالم-{$i}?param=value&lang=ar",
 						lastmod: time(),
 						priority: 0.9,
 						changefreq: 'daily',
 						news: [
-							'title' => "News Title موتسيبي > Article {$i}",
+							'title' => "News Title بالعالم > Article {$i}",
 							'genres' => 'PressRelease',
 							'name' => 'ExampleNews',
 							'language' => 'ar',
@@ -1229,15 +1232,15 @@ class SitemapsTest extends TestCase
 						]
 					);
 
-					yield $item->alternate("/fr/article-موتسيبي-{$i}?param=value&lang=fr", "fr")
-						->alternate("/en/article-موتسيبي-{$i}?param=value&lang=en", "en")
+					yield $item->alternate("/fr/article-بالعالم-{$i}?param=value&lang=fr", "fr")
+						->alternate("/en/article-بالعالم-{$i}?param=value&lang=en", "en")
 						->video("Video Title {$i}", [
 							'thumbnail' => "/thumb-{$i}.jpg?size=large&quality=high",
 							'description' => "Video description with special chars <>&",
 							'content_loc' => "/videos/video-{$i}.mp4?quality=hd"
 						])
 						->video("Second Video {$i}", [
-							'thumbnail' => "/thumb2-موتسيبي-{$i}.jpg",
+							'thumbnail' => "/thumb2-بالعالم-{$i}.jpg",
 							'description' => 'Second video description',
 							'player_loc' => [
 								'value' => "/player/{$i}",
@@ -1281,10 +1284,10 @@ class SitemapsTest extends TestCase
 		$this->assertStringContainsString('xmlns:news=', $newsContent);
 		$this->assertStringContainsString('xmlns:video=', $newsContent);
 		$this->assertStringContainsString('xmlns:xhtml=', $newsContent);
-		$this->assertStringContainsString('/article-%D9%85%D9%88%D8%AA%D8%B3%D9%8A%D8%A8%D9%8A-0', $newsContent);
-		$this->assertStringContainsString('https://example.com/article-%D9%85%D9%88%D8%AA%D8%B3%D9%8A%D8%A8%D9%8A-49', $newsContent);
+		$this->assertStringContainsString('/article-%D8%A8%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85-0', $newsContent);
+		$this->assertStringContainsString('https://example.com/article-%D8%A8%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85-49', $newsContent);
 		$this->assertStringContainsString('<news:title>', $newsContent);
-		$this->assertStringContainsString('موتسيبي', $newsContent);
+		$this->assertStringContainsString('بالعالم', $newsContent);
 		$this->assertStringContainsString('<video:title>Video Title', $newsContent);
 		$this->assertStringContainsString('<video:title>Second Video', $newsContent);
 		$this->assertStringContainsString('allow_embed="yes"', $newsContent);
