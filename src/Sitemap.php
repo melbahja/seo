@@ -2,251 +2,236 @@
 namespace Melbahja\Seo;
 
 use Closure;
+use Traversable;
 use Melbahja\Seo\{
 	Sitemap\SitemapIndex,
+	Sitemap\NewsBuilder,
+	Sitemap\LinksBuilder,
+	Sitemap\IndexBuilder,
+	Sitemap\OutputMode,
+	Sitemap\SitemapUrl,
 	Exceptions\SitemapException,
-	Interfaces\SitemapIndexInterface,
 	Interfaces\SitemapBuilderInterface
 };
 
 /**
  * @package Melbahja\Seo
- * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
-class Sitemap implements SitemapIndexInterface
+class Sitemap implements SitemapBuilderInterface
 {
 
 	/**
-	 * Sitemap options
+	 * Sitemaps map of generated files.
+	 *
 	 * @var array
 	 */
-	protected $options = 
-	[
-		'save_path' => null,
-		'index_name' => 'sitemap.xml',
-		'sitemaps_url' => null,
-	]
+	protected array $sitemaps  = [];
 
 	/**
-	 * Sitemap files
+	 * Sitemaps data generators.
+	 *
 	 * @var array
 	 */
-	, $sitemaps  = []
-
-	/**
-	 * Sitemaps domain name
-	 * @var string
-	 */
-	, $domain;
+	protected array $dSources  = [];
 
 
 	/**
 	 * Initialize new sitemap builder
-	 *
-	 * @param string $domain The domain name only
-	 * @param array  $options
 	 */
-	public function __construct(string $domain, array $options = null)
-	{
-		$this->domain = $domain;
+	public function __construct(
 
-		if ($options !== null) {
-			$this->setOptions($options);
+		/**
+		 * @param string $baseUrl  The base URL for sitemap urls.
+		 */
+		public readonly string $baseUrl,
+
+		/**
+		 * @param string|null $saveDir Local directory where generated XML files will be written
+		 */
+		public readonly ?string $saveDir = null,
+
+		/**
+		 * @param string $indexName Filename for the root sitemap index file
+		 */
+		public readonly string $indexName = 'sitemap.xml',
+
+		/**
+		 * @param string|null $sitemapBaseUrl The generated sitemaps base url in the index sitemap defaults to $baseUrl
+		 */
+		private readonly ?string $sitemapBaseUrl = null,
+
+		/**
+		 * Sitemap builders map
+		 *
+		 * @var array<string, SitemapBuilderInterface>
+		 */
+		private array $builders = [
+			'news'  => NewsBuilder::class,
+			'links' => LinksBuilder::class,
+			'index' => IndexBuilder::class
+		],
+
+		/**
+		 * The output mode of generated sitemaps.
+		 *
+		 * @var OutputMode
+		 */
+		protected OutputMode $mode = OutputMode::TEMP,
+
+		/**
+		 * Pretty print indent
+		 * @param string|null
+		 */
+		protected readonly ?string $indent = ' '
+	) {}
+
+
+	/**
+	 * Register a builder alias
+	 *
+	 * @param  string $alias   the builder alias name
+	 * @param  string $builder The actual builder class namespace.
+	 * @return self
+	 */
+	public function register(string $alias, string $builder): self
+	{
+		if (is_subclass_of($builder, SitemapBuilderInterface::class) === false) {
+			throw new \InvalidArgumentException('The builder must implement SitemapBuilderInterface');
 		}
-	}
 
-	/**
-	 * Set builer options
-	 *
-	 * @param array $options
-	 * @return SitemapIndexInterface
-	 */
-	public function setOptions(array $options): SitemapIndexInterface
-	{
-		$this->options = array_merge($this->options, $options);
+		$this->builders[$alias] = $builder;
 		return $this;
 	}
 
-	/**
-	 * Get all sitemap options
-	 *
-	 * @return array
-	 */
-	public function getOptions(): array
-	{
-		return $this->options;
-	}
 
 	/**
-	 * Set save path
-	 *
-	 * @param string $path
-	 * @return SitemapIndexInterface
-	 */
-	public function setSavePath(string $path): SitemapIndexInterface
-	{
-		$this->options['save_path'] = $path;
-		return $this;
-	}
-
-	/**
-	 * Get save path
-	 *
-	 * @return null|string
-	 */
-	public function getSavePath(): ?string
-	{
-		return $this->options['save_path'];
-	}
-
-	/**
-	 * Set index name
-	 * 
-	 * @param string $name
-	 * @return SitemapIndexInterface
-	 */
-	public function setIndexName(string $name): SitemapIndexInterface
-	{
-		$this->options['index_name'] = $name;
-		return $this;
-	}
-
-	/**
-	 * Get Index name
+	 * Get sitemaps base url
 	 *
 	 * @return string
 	 */
-	public function getIndexName(): string
+	public function getSitemapBaseUrl(): string
 	{
-		return $this->options['index_name'];
+		return $this->sitemapBaseUrl ?? $this->baseUrl;
 	}
 
 	/**
-	 * Set sitemaps url
+	 * Set sitemaps to a file name.
 	 *
-	 * @param string $url
-	 * @return SitemapIndexInterface
+	 * @param  string|null $uriPath URI path to render the sitemap into, or null will return the xml
+	 * @return bool|string boolean when uri oath passed or a generated xml as string
 	 */
-	public function setSitemapsUrl(string $url): SitemapIndexInterface
+	public function render(?string $uriPath = null): bool|string
 	{
-		$this->options['sitemaps_url'] = $url;
-		return $this;
-	}
-
-	/**
-	 * Get sitemaps url
-	 *
-	 * @return null|string
-	 */
-	public function getSitemapsUrl(): ?string
-	{
-		return $this->options['sitemaps_url'] ?? $this->domain;
-	}
-
-	/**
-	 * Get sitemaps domain
-	 *
-	 * @return string
-	 */
-	public function getDomain(): string
-	{
-		return $this->domain;
-	}
-
-	/**
-	 * Set sitemaps to a path
-	 *
-	 * @param  string $path
-	 * @return bool
-	 */
-	public function saveTo(string $path): bool
-	{
-		return SitemapIndex::build(
-			$this->getIndexName(), $path, $this->getSitemapsUrl(), $this->sitemaps
+		$index =  new IndexBuilder(
+			mode:     $this->mode,
+			baseUrl:  $this->getSitemapBaseUrl(),
+			filePath: $this->saveDir . DIRECTORY_SEPARATOR . $this->indexName,
+			options:  ['indent' => $this->indent],
 		);
-	}
 
-	/**
-	 * {@method saveTo} by pre defined save_path option 
-	 * 
-	 * @param  string $path
-	 * @return bool
-	 */
-	public function save(): bool
-	{
-		if (is_string($this->options['save_path']) === false) {
+		foreach ($this->sitemaps as $k => $sitemap)
+		{
+			if ($sitemap->mode !== OutputMode::MEMORY) {
+				$this->generate($k)->render();
+			}
 
-			throw new SitemapException('Invalid or missing save_path option'); 
+			$index->addSitemap($k);
 		}
 
-		return $this->saveTo($this->options['save_path']);
+		return $index->render($uriPath);
 	}
 
+	public function __toString(): string
+	{
+		return $this->render();
+	}
 
 	/**
 	 * Generate sitemaps
 	 *
-	 * @param  SitemapBuilderInterface $builder
-	 * @param  array $options
-	 * @param  callable $func
+	 * @param  array    $name    the name of registred sitemap.
+	 * @return SitemapBuilderInterface retuns the generated sitemap object.
+	 */
+	public function generate(string $name): SitemapBuilderInterface
+	{
+		$dataSource = $this->dSources[$name] ?? null;
+		if ($dataSource === null || isset($this->sitemaps[$name]) === false) {
+			throw new SitemapException("There is no data source or registred sitemap for {$name}!");
+		}
+
+		$builder = $this->sitemaps[$name];
+
+		if (is_callable($dataSource)) {
+			call_user_func_array($dataSource, [$builder]);
+			return $builder;
+		}
+
+		foreach ($dataSource as $item)
+		{
+			// in case of array or even Traversable yeild as string
+			if (is_string($item)) {
+				$builder->loc($item);
+				continue;
+			}
+
+			if (($item instanceof SitemapUrl) === false) {
+				throw new SitemapException("Traversable yeilds can be strings or SitemapUrl object only");
+			}
+
+			$builder->addItem($item);
+		}
+
+		return $builder;
+	}
+
+	/**
+	 * Initialize sitemaps generator from alias
+	 *
+	 * @param  string $alias    The builder alias (e.g. 'links', 'news', 'index', 'yourBuilderAlias')
+	 * @param  array  $args      [$config, $dataSource] where $config is string|array
 	 * @return SitemapIndexInterface
 	 */
-	public function build(SitemapBuilderInterface $builder, array $options, callable $func): SitemapIndexInterface
+	public function __call(string $alias, array $args): self
 	{
+		$builder = $this->builders[$alias] ?? null;
+
+		if ($builder === null) {
+			throw new SitemapException("The builder alias: '{$alias}' not found.");
+		}
+
+		if (count($args) !== 2) {
+			throw new SitemapException("{$alias}() expects 2 arguments: [string|array \$options, callable|Traversable|array \$dataSource]");
+		}
+
+		$options = is_string($args[0]) ? [ 'name' => $args[0] ] : $args[0];
+		if (isset($options['name']) === false) {
+			throw new SitemapException("The {$alias} name is missing!");
+		}
+
 		if (isset($this->sitemaps[$options['name']])) {
-			throw new SitemapException("The sitemap {$name} already registred!");
+			throw new SitemapException("The sitemap {$options['name']} already registred!");
 		}
 
-		// Generate urls.
-		call_user_func_array($func, [$builder]);
-
-		return $this->buildTemp($options['name'], $builder);
-	}
-
-	/**
-	 * Sitemaps generator
-	 *
-	 * @param  string $builder
-	 * @param  array  $args
-	 * @return SitemapIndexInterface
-	 */
-	public function __call(string $builder, array $args): SitemapIndexInterface
-	{
-		if (class_exists($builder = '\Melbahja\Seo\Sitemap\\' . ucfirst($builder) . 'Builder')) {
-
-			if (count($args) !== 2) {
-
-				throw new SitemapException("Invalid {$builder} arguments");
-			
-			} elseif (is_string($args[0])) {
-
-				$args[0] = ['name' => $args[0]];
-			}
-
-			if (isset($args[0]['name']) === false) {
-
-				throw new SitemapException("Sitemap name is required for {$builder}");
-			}
-
-			return $this->build(new $builder($this->domain, $args[0]), ...$args);
+		if (is_array($args[1]) === false && is_callable($args[1]) === false && ($args[1] instanceof Traversable) === false) {
+			 throw new SitemapException("{$alias}() Argument[1] must be array, callable, or Traversable");
 		}
 
-		throw new SitemapException("Sitemap builder {$builder} not exists");
-	}
+		$name = $options['name'];
+		unset($options['name']);
 
-	/**
-	 * Build registred sitemap and save it on temp
-	 *
-	 * @param string                  $name
-	 * @param SitemapBuilderInterface $builder
-	 * @return SitemapIndexInterface
-	 */
-	protected function buildTemp(string $name, SitemapBuilderInterface $builder): SitemapIndexInterface
-	{
-		$this->sitemaps[$name] = $builder->saveTemp();
+		$options['indent'] = $options['indent'] ?? $this->indent;
+
+		$this->dSources[$name] = $args[1];
+		$this->sitemaps[$name] = new $builder(
+			mode:     $this->mode,
+			baseUrl:  $this->baseUrl,
+			filePath: $this->saveDir . DIRECTORY_SEPARATOR . $name,
+			options:  $options,
+		);
+
 		return $this;
 	}
 }

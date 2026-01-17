@@ -3,17 +3,16 @@ namespace Melbahja\Seo\Sitemap;
 
 use Melbahja\Seo\{
 	Exceptions\SitemapException,
-	Interfaces\SitemapBuilderInterface
+	Interfaces\SitemapSetupableInterface
 };
 
 /**
  * @package Melbahja\Seo
- * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
-class NewsBuilder extends SitemapBuilder 
+class NewsBuilder extends LinksBuilder implements SitemapSetupableInterface
 {
 
 	/**
@@ -25,15 +24,14 @@ class NewsBuilder extends SitemapBuilder
 	/**
 	 * Initialize NewsBuilder
 	 *
-	 * @param string     $domain
-	 * @param array|null $options
-	 * @param string     $ns
+	 * @param string $options
+	 * @return array
 	 */
-	public function __construct(string $domain, ?array $options = null, string $ns = '')
+	public function preSetup(array $options): array
 	{
-		parent::__construct($domain, $options, $ns .' xmlns:news="'. static::NEWS_NS . '"');
+		$options['news'] = true;
+		return $options;
 	}
-
 
 	/**
 	 * Set dafault publication
@@ -65,14 +63,14 @@ class NewsBuilder extends SitemapBuilder
 
 
 	/**
-	 * Set a news (Fake news not allowed ^_~)
+	 * Add news elem to the current url.
 	 *
 	 * @param  array  $options
-	 * @return SitemapBuilderInterface
+	 * @return self
 	 */
-	public function news(array $options): SitemapBuilderInterface
+	public function news(array $options): self
 	{
-		$options['name'] = $options['name'] ?? $this->publication['name'];
+		$options['name']     = $options['name'] ?? $this->publication['name'];
 		$options['language'] = $options['language'] ?? $this->publication['lang'];
 
 		if (isset($options['name'], $options['language'], $options['publication_date'], $options['title']) === false) {
