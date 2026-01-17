@@ -122,7 +122,7 @@ class LinksBuilder implements SitemapBuilderInterface
 
 					$this->writer = XMLWriter::toStream($stream);
 
-				} else { // php <= 8.4 workaround
+				} else { // php < 8.4 workaround
 
 					$this->tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . md5(uniqid()) . '.xml';
 					$this->writer   = new XMLWriter();
@@ -475,7 +475,7 @@ class LinksBuilder implements SitemapBuilderInterface
 			return rename($this->tempPath, $this->filePath);
 		}
 
-		// php <= 8.4 workaround
+		// php < 8.4 workaround
 		if ($this->mode === OutputMode::STREAM && method_exists(XMLWriter::class, 'toStream') === false) {
 
 			$tempFd = fopen($this->tempPath, 'r');
