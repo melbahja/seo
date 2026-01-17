@@ -3,7 +3,7 @@ namespace Melbahja\Seo\Indexing;
 
 use \RuntimeException;
 use \InvalidArgumentException;
-use Melbahja\Utils\HttpClient;
+use Melbahja\Seo\Utils\HttpClient;
 use Melbahja\Seo\Interfaces\SeoInterface;
 
 /**
