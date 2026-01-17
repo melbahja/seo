@@ -118,11 +118,22 @@ class LinksBuilder implements SitemapBuilderInterface
 
 			case OutputMode::STREAM:
 
-				$this->writer = XMLWriter::toStream($stream);
+				if (function_exists('\xmlwriter_open_memory')) {
+
+					$this->writer = XMLWriter::toStream($stream);
+
+				} else { // php <= 8.4 workaround
+
+					$this->tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . md5(uniqid()) . '.xml';
+					$this->writer   = new XMLWriter();
+					$this->writer->openUri($this->tempPath);
+				}
+
 				break;
 
 			default:
-				$this->writer = XMLWriter::toMemory();
+				$this->writer = new XMLWriter();
+				$this->writer->openMemory();
 				break;
 		}
 
@@ -462,6 +473,16 @@ class LinksBuilder implements SitemapBuilderInterface
 		$this->writer->flush();
 		if ($this->mode === OutputMode::TEMP) {
 			return rename($this->tempPath, $this->filePath);
+		}
+
+		// php <= 8.4 workaround
+		if ($this->mode === OutputMode::STREAM && function_exists('\xmlwriter_open_memory') === false) {
+
+			$tempFd = fopen($this->tempPath, 'r');
+			$stcopy = stream_copy_to_stream($tempFd, $this->stream);
+			fclose($tempFd);
+
+			return (bool) $stcopy;
 		}
 
 		return true;
