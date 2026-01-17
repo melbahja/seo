@@ -87,7 +87,8 @@ class IndexBuilder implements SitemapBuilderInterface
 				}
 
 				$this->tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . md5(uniqid()) . '.xml';
-				$this->writer   = XMLWriter::toUri($this->tempPath);
+				$this->writer   = new XMLWriter();
+				$this->writer->openUri($this->tempPath);
 				break;
 
 			case OutputMode::FILE:
@@ -96,7 +97,8 @@ class IndexBuilder implements SitemapBuilderInterface
 					throw new SitemapException("Output \$filePath can not be empty!");
 				}
 
-				$this->writer = XMLWriter::toUri($filePath);
+				$this->writer = new XMLWriter();
+				$this->writer->openUri($filePath);
 				break;
 
 			case OutputMode::STREAM:
