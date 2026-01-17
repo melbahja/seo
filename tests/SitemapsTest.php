@@ -1214,7 +1214,7 @@ class SitemapsTest extends TestCase
 		{
 				for ($i = 0; $i < 50; $i++)
 				{
-					yield new SitemapUrl(
+					$item = new SitemapUrl(
 						url: "/article-موتسيبي-{$i}?param=value&lang=ar",
 						lastmod: time(),
 						priority: 0.9,
@@ -1227,27 +1227,28 @@ class SitemapsTest extends TestCase
 							'publication_date' => date('c'),
 							'keywords' => 'keyword1, keyword2'
 						]
-					)
-					->alternate("/fr/article-موتسيبي-{$i}?param=value&lang=fr", "fr")
-					->alternate("/en/article-موتسيبي-{$i}?param=value&lang=en", "en")
-					->video("Video Title {$i}", [
-						'thumbnail' => "/thumb-{$i}.jpg?size=large&quality=high",
-						'description' => "Video description with special chars <>&",
-						'content_loc' => "/videos/video-{$i}.mp4?quality=hd"
-					])
-					->video("Second Video {$i}", [
-						'thumbnail' => "/thumb2-موتسيبي-{$i}.jpg",
-						'description' => 'Second video description',
-						'player_loc' => [
-							'value' => "/player/{$i}",
-							'attrs' => ['allow_embed' => 'yes', 'autoplay' => 'ap=1']
-						],
-						'view_count' => 1000 + $i,
-						'restriction' => [
-							'attrs' => ['relationship' => 'allow'],
-							'value' => 'US CA GB'
-						]
-					]);
+					);
+
+					yield $item->alternate("/fr/article-موتسيبي-{$i}?param=value&lang=fr", "fr")
+						->alternate("/en/article-موتسيبي-{$i}?param=value&lang=en", "en")
+						->video("Video Title {$i}", [
+							'thumbnail' => "/thumb-{$i}.jpg?size=large&quality=high",
+							'description' => "Video description with special chars <>&",
+							'content_loc' => "/videos/video-{$i}.mp4?quality=hd"
+						])
+						->video("Second Video {$i}", [
+							'thumbnail' => "/thumb2-موتسيبي-{$i}.jpg",
+							'description' => 'Second video description',
+							'player_loc' => [
+								'value' => "/player/{$i}",
+								'attrs' => ['allow_embed' => 'yes', 'autoplay' => 'ap=1']
+							],
+							'view_count' => 1000 + $i,
+							'restriction' => [
+								'attrs' => ['relationship' => 'allow'],
+								'value' => 'US CA GB'
+							]
+						]);
 				}
 			})
 		);
@@ -1256,13 +1257,12 @@ class SitemapsTest extends TestCase
 		{
 				for ($i = 0; $i < 30; $i++)
 				{
-					yield new SitemapUrl(
+					yield (new SitemapUrl(
 						url: "/page-{$i}",
 						lastmod: time() - ($i * 86400),
 						priority: 0.5 + ($i * 0.01),
 						changefreq: 'weekly'
-					)
-					->image("/images/img-{$i}.jpg", ['title' => "Image {$i}", 'caption' => "Caption {$i}"]);
+					))->image("/images/img-{$i}.jpg", ['title' => "Image {$i}", 'caption' => "Caption {$i}"]);
 				}
 
 				for ($i=0; $i < 10; $i++)
