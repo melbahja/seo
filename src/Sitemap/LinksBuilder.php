@@ -118,7 +118,7 @@ class LinksBuilder implements SitemapBuilderInterface
 
 			case OutputMode::STREAM:
 
-				if (function_exists('\xmlwriter_open_memory')) {
+				if (method_exists(XMLWriter::class, 'toStream')) {
 
 					$this->writer = XMLWriter::toStream($stream);
 
@@ -476,7 +476,7 @@ class LinksBuilder implements SitemapBuilderInterface
 		}
 
 		// php <= 8.4 workaround
-		if ($this->mode === OutputMode::STREAM && function_exists('\xmlwriter_open_memory') === false) {
+		if ($this->mode === OutputMode::STREAM && method_exists(XMLWriter::class, 'toStream') === false) {
 
 			$tempFd = fopen($this->tempPath, 'r');
 			$stcopy = stream_copy_to_stream($tempFd, $this->stream);
