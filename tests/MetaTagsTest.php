@@ -29,7 +29,7 @@ class MetaTagsTest extends TestCase
 		$metatags
 				->title('PHP SEO')
 				->description('This is my description')
-				->meta('author', 'Mohamed Elabhja')
+				->meta('author', 'Mohamed Elbahja')
 				->image('https://avatars3.githubusercontent.com/u/8259014')
 				->mobile('https://m.example.com')
 				->canonical('https://example.com')
@@ -39,7 +39,7 @@ class MetaTagsTest extends TestCase
 
 		$this->assertNotEmpty((string) $metatags);
 
-		$this->assertEquals('<title>PHP SEO</title><meta name="title" content="PHP SEO" /><meta name="description" content="This is my description" /><meta name="author" content="Mohamed Elabhja" /><link href="https://m.example.com" rel="alternate" media="only screen and (max-width: 640px)" /><link rel="canonical" href="https://example.com" /><link rel="shortlink" href="https://git.io/phpseo" /><link rel="amphtml" href="https://apm.example.com" /><link rel="alternate" href="https://example.com/es/" hreflang="es-es" /><meta property="og:title" content="PHP SEO" /><meta property="og:description" content="This is my description" /><meta property="og:image" content="https://avatars3.githubusercontent.com/u/8259014" /><meta property="twitter:title" content="PHP SEO" /><meta property="twitter:description" content="This is my description" /><meta property="twitter:card" content="summary_large_image" /><meta property="twitter:image" content="https://avatars3.githubusercontent.com/u/8259014" />',
+		$this->assertEquals('<title>PHP SEO</title><meta name="title" content="PHP SEO" /><meta name="description" content="This is my description" /><meta name="author" content="Mohamed Elbahja" /><link href="https://m.example.com" rel="alternate" media="only screen and (max-width: 640px)" /><link rel="canonical" href="https://example.com" /><link rel="shortlink" href="https://git.io/phpseo" /><link rel="amphtml" href="https://apm.example.com" /><link rel="alternate" href="https://example.com/es/" hreflang="es-es" /><meta property="og:title" content="PHP SEO" /><meta property="og:description" content="This is my description" /><meta property="og:image" content="https://avatars3.githubusercontent.com/u/8259014" /><meta property="twitter:title" content="PHP SEO" /><meta property="twitter:description" content="This is my description" /><meta property="twitter:card" content="summary_large_image" /><meta property="twitter:image" content="https://avatars3.githubusercontent.com/u/8259014" />',
 			str_replace("\n", '', (string)$metatags)
 		);
 
@@ -64,6 +64,7 @@ class MetaTagsTest extends TestCase
 					'google' => 'abc123',
 				],
 
+				// Set multi tags
 				'link' => [
 					['rel' => 'alternate', 'href' => 'https://example.com/fr', 'hreflang' => 'fr'],
 					['rel' => 'alternate', 'href' => 'https://example.com/es', 'hreflang' => 'es'],
@@ -129,7 +130,8 @@ class MetaTagsTest extends TestCase
 
 		$output = (string) $metatags;
 
-		$output2 = (string) new MetaTags([
+
+		$this->assertEquals($output, (string) new MetaTags([
 			'title'       => 'Test Page',
 			'description' => 'Test description',
 			'keywords'    => 'php, test',
@@ -148,9 +150,9 @@ class MetaTagsTest extends TestCase
 					])
 				])
 			),
-		]);
+		]));
 
-		$this->assertEquals($output, $output2);
+
 		$this->assertStringContainsString('<title>Test Page</title>', $output);
 		$this->assertStringContainsString('name="description" content="Test description"', $output);
 		$this->assertStringContainsString('name="keywords" content="php, test"', $output);
@@ -159,6 +161,8 @@ class MetaTagsTest extends TestCase
 		$this->assertStringContainsString('name="robots" content="index, follow"', $output);
 		$this->assertStringContainsString('rel="canonical" href="https://example.com"', $output);
 		$this->assertStringContainsString('"@type":"ContactPoint"', $output);
+		$this->assertStringContainsString('"@type":"Organization"', $output);
+		$this->assertStringContainsString('"@context":"https:\/\/schema.org"', $output);
 		$this->assertStringContainsString('<script type="application/ld+json">', $output);
 		$this->assertStringContainsString('"name":"Example Org",', $output);
 	}

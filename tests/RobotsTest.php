@@ -11,7 +11,7 @@ class RobotsTest extends TestCase
 		$robots = new Robots();
 		$robots->addRule('*', disallow: ['/admin'], allow: ['/public']);
 
-		$expected = "User-agent: *\r\nDisallow: /admin\r\nAllow: /public\r\n\r\n";
+		$expected = str_replace("\r\n", PHP_EOL, "User-agent: *\r\nDisallow: /admin\r\nAllow: /public\r\n\r\n");
 		$this->assertEquals($expected, (string) $robots);
 	}
 
@@ -21,7 +21,7 @@ class RobotsTest extends TestCase
 		$robots->addRule(userAgent: '*', disallow: ['/private', '/admin'], allow: ['/', '/public'], crawlDelay: 5);
 		$robots->addRule('googlebot', [], [], 1);
 
-		$expected = "User-agent: *\r\nDisallow: /private\r\nDisallow: /admin\r\nAllow: /\r\nAllow: /public\r\nCrawl-delay: 5\r\n\r\nUser-agent: googlebot\r\nCrawl-delay: 1\r\n\r\n";
+		$expected = str_replace("\r\n", PHP_EOL, "User-agent: *\r\nDisallow: /private\r\nDisallow: /admin\r\nAllow: /\r\nAllow: /public\r\nCrawl-delay: 5\r\n\r\nUser-agent: googlebot\r\nCrawl-delay: 1\r\n\r\n");
 		$this->assertEquals($expected, (string) $robots);
 	}
 
@@ -30,7 +30,7 @@ class RobotsTest extends TestCase
 		$robots = new Robots();
 		$robots->addSitemap('https://example.com/sitemap.xml');
 
-		$expected = "Sitemap: https://example.com/sitemap.xml\r\n";
+		$expected = str_replace("\r\n", PHP_EOL, "Sitemap: https://example.com/sitemap.xml\r\n");
 		$this->assertEquals($expected, (string) $robots);
 	}
 
@@ -39,7 +39,7 @@ class RobotsTest extends TestCase
 		$robots = new Robots();
 		$robots->addComment('Custom robots.txt');
 
-		$expected = "# Custom robots.txt\r\n";
+		$expected = str_replace("\r\n", PHP_EOL, "# Custom robots.txt\r\n");
 		$this->assertEquals($expected, (string) $robots);
 	}
 
@@ -52,7 +52,7 @@ class RobotsTest extends TestCase
 		$robots->addComment('Block bad bots');
 		$robots->addRule('BadBot', ['/']);
 
-		$expected = "# Website robots.txt\r\nSitemap: https://example.com/sitemap.xml\r\nUser-agent: *\r\nDisallow: /admin\r\n\r\n# Block bad bots\r\nUser-agent: BadBot\r\nDisallow: /\r\n\r\n";
+		$expected = str_replace("\r\n", PHP_EOL, "# Website robots.txt\r\nSitemap: https://example.com/sitemap.xml\r\nUser-agent: *\r\nDisallow: /admin\r\n\r\n# Block bad bots\r\nUser-agent: BadBot\r\nDisallow: /\r\n\r\n");
 		$this->assertEquals($expected, (string) $robots);
 	}
 
@@ -62,7 +62,7 @@ class RobotsTest extends TestCase
 		$robots->addSitemap('https://example.com/sitemap.xml');
 		$robots->addSitemap('https://example.com/sitemap-news.xml');
 
-		$expected = "Sitemap: https://example.com/sitemap.xml\r\nSitemap: https://example.com/sitemap-news.xml\r\n";
+		$expected = str_replace("\r\n", PHP_EOL, "Sitemap: https://example.com/sitemap.xml\r\nSitemap: https://example.com/sitemap-news.xml\r\n");
 		$this->assertEquals($expected, (string) $robots);
 	}
 
@@ -71,7 +71,7 @@ class RobotsTest extends TestCase
 		$robots = new Robots();
 		$robots->addComment("Line 1\nLine 2");
 
-		$expected = "# Line 1\r\n# Line 2\r\n";
+		$expected = str_replace("\r\n", PHP_EOL, "# Line 1\r\n# Line 2\r\n");
 		$this->assertEquals($expected, (string) $robots);
 	}
 
