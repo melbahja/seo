@@ -9,7 +9,7 @@ use Melbahja\Seo\Interfaces\SchemaInterface;
  * @package Melbahja\Seo
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class MetaTags implements SeoInterface
 {
@@ -433,7 +433,7 @@ class MetaTags implements SeoInterface
 		$out = '';
 		foreach ($tags as $tag)
 		{
-			$out .= "\n<{$tag[0]} ";
+			$out .= PHP_EOL . "<{$tag[0]} ";
 
 			foreach ($tag[1] as $a => $v)
 			{
@@ -446,6 +446,8 @@ class MetaTags implements SeoInterface
 				// if you trust your users to set arbitary meta attr names that a STUPID idea, but
 				// anyway I did a small replace to avid common XSS chars that may hack you!
 				$a = str_replace(['"', "'", '<', '>', ' ', "\t", "\n", "\r"], '', $a);
+
+				// Set attr=value
 				$out .= $a .'="'. Utils::escape($v) .'" ';
 			}
 

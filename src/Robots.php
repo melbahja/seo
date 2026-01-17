@@ -6,10 +6,9 @@ use Melbahja\Seo\Interfaces\SeoInterface;
 
 /**
  * @package Melbahja\Seo
- * @since v3.0
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  *
  */
 class Robots implements SeoInterface, Stringable
@@ -96,35 +95,36 @@ class Robots implements SeoInterface, Stringable
 			switch ($rule['type'])
 			{
 				case 'comment':
-					$lines = explode("\n", $rule['text']);
-					foreach ($lines as $line)
+
+					foreach (explode("\n", $rule['text']) as $line)
 					{
-						$out .= "# {$line}\r\n";
+						$out .= "# {$line}". PHP_EOL;
 					}
 					break;
 
 				case 'sitemap':
-					$out .= "Sitemap: {$rule['url']}\r\n";
+
+					$out .= "Sitemap: {$rule['url']}". PHP_EOL;
 					break;
 
 				case 'rule':
 
-					$out .= "User-agent: {$rule['userAgent']}\r\n";
+					$out .= "User-agent: {$rule['userAgent']}". PHP_EOL;
 					foreach ($rule['disallow'] as $path)
 					{
-						$out .= "Disallow: {$path}\r\n";
+						$out .= "Disallow: {$path}". PHP_EOL;
 					}
 
 					foreach ($rule['allow'] as $path)
 					{
-						$out .= "Allow: {$path}\r\n";
+						$out .= "Allow: {$path}". PHP_EOL;
 					}
 
 					if ($rule['crawlDelay'] !== null) {
-						$out .= "Crawl-delay: {$rule['crawlDelay']}\r\n";
+						$out .= "Crawl-delay: {$rule['crawlDelay']}". PHP_EOL;
 					}
 
-					$out .= "\r\n";
+					$out .= PHP_EOL;
 					break;
 			}
 		}

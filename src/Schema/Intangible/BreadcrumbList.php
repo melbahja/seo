@@ -8,6 +8,6 @@ use Melbahja\Seo\Schema\Intangible;
  * @see https://git.io/phpseo
  * @see https://schema.org/BreadcrumbList
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class BreadcrumbList extends Intangible { }

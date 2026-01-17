@@ -9,7 +9,7 @@ use Melbahja\Seo\Interfaces\SchemaInterface;
  * @see https://git.io/phpseo
  * @see https://schema.org/Thing
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class Thing implements SchemaInterface
 {

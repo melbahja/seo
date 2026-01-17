@@ -8,6 +8,6 @@ use Melbahja\Seo\Schema\Place;
  * @see https://git.io/phpseo
  * @see https://schema.org/LocalBusiness
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class LocalBusiness extends Place { }

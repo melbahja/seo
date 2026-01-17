@@ -7,6 +7,6 @@ namespace Melbahja\Seo\Schema;
  * @see https://git.io/phpseo
  * @see https://schema.org/Product
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class Product extends Thing { }

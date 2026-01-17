@@ -10,12 +10,14 @@ use Melbahja\Seo\Interfaces\SeoInterface;
  * @package Melbahja\Seo
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class GoogleIndexer
 {
 	private string $accessToken;
+
 	private HttpClient $httpClient;
+
 	private const API_URL = 'https://indexing.googleapis.com/v3/urlNotifications:publish';
 
 	public function __construct(string $accessToken, ?HttpClient $httpClient = null)

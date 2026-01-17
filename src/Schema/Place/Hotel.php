@@ -8,6 +8,6 @@ use Melbahja\Seo\Schema\Place;
  * @see https://git.io/phpseo
  * @see https://schema.org/Hotel
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class Hotel extends Place { }

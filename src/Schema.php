@@ -7,7 +7,7 @@ use Melbahja\Seo\Interfaces\SchemaInterface;
  * @package Melbahja\Seo
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class Schema implements SchemaInterface
 {
@@ -44,7 +44,7 @@ class Schema implements SchemaInterface
 	 */
 	public function all(): array
 	{
-	    return $this->things;
+		return $this->things;
 	}
 
 	/**

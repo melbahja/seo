@@ -8,6 +8,6 @@ namespace Melbahja\Seo\Schema;
  * @see https://git.io/phpseo
  * @see https://schema.org/CreativeWork
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class CreativeWork extends Thing { }

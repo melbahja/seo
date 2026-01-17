@@ -8,6 +8,6 @@ use Melbahja\Seo\Schema\CreativeWork;
  * @see https://git.io/phpseo
  * @see https://schema.org/HowTo
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class HowTo extends CreativeWork { }

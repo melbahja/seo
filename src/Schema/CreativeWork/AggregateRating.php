@@ -8,6 +8,6 @@ use Melbahja\Seo\Schema\CreativeWork;
  * @see https://git.io/phpseo
  * @see https://schema.org/AggregateRating
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class AggregateRating extends CreativeWork { }

@@ -10,7 +10,7 @@ use Melbahja\Seo\Interfaces\SeoInterface;
  * @package Melbahja\Seo
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class IndexNowIndexer
 {

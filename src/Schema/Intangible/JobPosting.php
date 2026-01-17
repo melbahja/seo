@@ -8,6 +8,6 @@ use Melbahja\Seo\Schema\Intangible;
  * @see https://git.io/phpseo
  * @see https://schema.org/JobPosting
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class JobPosting extends Intangible { }

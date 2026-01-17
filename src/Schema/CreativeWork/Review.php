@@ -8,6 +8,6 @@ use Melbahja\Seo\Schema\CreativeWork;
  * @see https://git.io/phpseo
  * @see https://schema.org/Review
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class Review extends CreativeWork { }

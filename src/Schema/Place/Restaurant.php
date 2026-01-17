@@ -8,6 +8,6 @@ use Melbahja\Seo\Schema\Place;
  * @see https://git.io/phpseo
  * @see https://schema.org/Restaurant
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class Restaurant extends Place { }

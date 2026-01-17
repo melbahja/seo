@@ -8,7 +8,7 @@ use Melbahja\Seo\Schema\Thing;
  * @package Melbahja\Seo
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class SchemaValidator
 {
@@ -107,11 +107,11 @@ class SchemaValidator
 		foreach ($types as $type)
 		{
 			$typeRules = self::loadRules($type);
-			$rules = array_merge($rules, $typeRules);
+			$rules     = array_merge($rules, $typeRules);
 		}
 
-		$errors = [];
 		// validate existing rules.
+		$errors = [];
 		foreach ($rules as $prop => $rule)
 		{
 			$value = $data[$prop] ?? null;
