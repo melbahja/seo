@@ -2,13 +2,13 @@
 namespace Melbahja\Seo;
 
 use Melbahja\Seo\Interfaces\SchemaInterface;
+use Melbahja\Seo\Schema\Thing;
 
 /**
  * @package Melbahja\Seo
- * @since v2.0
  * @see https://git.io/phpseo
  * @license MIT
- * @copyright 2019-present Mohamed Elabhja
+ * @copyright Mohamed Elbahja
  */
 class Schema implements SchemaInterface
 {
@@ -30,12 +30,22 @@ class Schema implements SchemaInterface
 	/**
 	 * Add schema item to the graph.
 	 *
-	 * @param SchemaInterface $thing
+	 * @param Thing $thing
 	 */
-	public function add(SchemaInterface $thing): SchemaInterface
+	public function add(Thing $thing): SchemaInterface
 	{
 		$this->things[] = $thing;
 		return $this;
+	}
+
+	/**
+	 * Get schema items
+	 *
+	 * @return Thing[]
+	 */
+	public function all(): array
+	{
+		return $this->things;
 	}
 
 	/**
@@ -45,9 +55,13 @@ class Schema implements SchemaInterface
 	 */
 	public function jsonSerialize(): array
 	{
+		if (count($this->things) === 1) {
+			return $this->things[0]->jsonSerialize();
+		}
+
 		return [
 			'@context' => 'https://schema.org',
-			'@graph'   => $this->things
+			'@graph'   => $this->things,
 		];
 	}
 
