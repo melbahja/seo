@@ -1,7 +1,6 @@
 <?php
 namespace Melbahja\Seo;
 
-use Stringable;
 use Melbahja\Seo\Interfaces\SeoInterface;
 
 /**
@@ -11,7 +10,7 @@ use Melbahja\Seo\Interfaces\SeoInterface;
  * @copyright Mohamed Elbahja
  *
  */
-class Robots implements SeoInterface, Stringable
+class Robots implements SeoInterface, \Stringable
 {
 	/**
 	 * All robot.txt rules
@@ -23,9 +22,9 @@ class Robots implements SeoInterface, Stringable
 	 * Add a comment line.
 	 *
 	 * @param  string $text Comment text
-	 * @return Robots
+	 * @return self
 	 */
-	public function addComment(string $text): Robots
+	public function addComment(string $text): self
 	{
 		$this->rules[] = ['type' => 'comment', 'text' => $text];
 		return $this;
@@ -35,9 +34,9 @@ class Robots implements SeoInterface, Stringable
 	 * Add a sitemap URL.
 	 *
 	 * @param  string $url Sitemap URL
-	 * @return Robots
+	 * @return self
 	 */
-	public function addSitemap(string $url): Robots
+	public function addSitemap(string $url): self
 	{
 		$this->rules[] = ['type' => 'sitemap', 'url' => $url];
 		return $this;
@@ -50,14 +49,9 @@ class Robots implements SeoInterface, Stringable
 	 * @param  array  $disallow Array of paths to disallow
 	 * @param  array  $allow Array of paths to allow
 	 * @param  int|null $crawlDelay Crawl delay in seconds
-	 * @return Robots
+	 * @return self
 	 */
-	public function addRule(
-		string $userAgent = '*',
-		array $disallow = [],
-		array $allow = [],
-		?int $crawlDelay = null
-	): Robots
+	public function addRule(string $userAgent = '*', array $disallow = [], array $allow = [], ?int $crawlDelay = null): self
 	{
 		$this->rules[] = [
 			'type' => 'rule',
@@ -89,7 +83,6 @@ class Robots implements SeoInterface, Stringable
 	public function __toString(): string
 	{
 		$out = "";
-
 		foreach ($this->rules as $rule)
 		{
 			switch ($rule['type'])

@@ -14,4 +14,3 @@ return [
 	'description' => 'string',
 	'jobTitle' => 'string',
 ];
-

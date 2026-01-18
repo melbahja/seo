@@ -1,8 +1,6 @@
 <?php
 namespace Melbahja\Seo;
 
-use Closure;
-use Traversable;
 use Melbahja\Seo\{
 	Sitemap\SitemapIndex,
 	Sitemap\NewsBuilder,
@@ -99,7 +97,7 @@ class Sitemap implements SitemapBuilderInterface
 	public function register(string $alias, string $builder): self
 	{
 		if (is_subclass_of($builder, SitemapBuilderInterface::class) === false) {
-			throw new \InvalidArgumentException('The builder must implement SitemapBuilderInterface');
+			throw new \SitemapException('The builder must implement SitemapBuilderInterface');
 		}
 
 		$this->builders[$alias] = $builder;
@@ -118,7 +116,7 @@ class Sitemap implements SitemapBuilderInterface
 	}
 
 	/**
-	 * Set sitemaps to a file name.
+	 * Write sitemaps to a file/stream or return as index string in case of memory mode.
 	 *
 	 * @param  string|null $uriPath URI path to render the sitemap into, or null will return the xml
 	 * @return bool|string boolean when uri oath passed or a generated xml as string
@@ -144,6 +142,11 @@ class Sitemap implements SitemapBuilderInterface
 		return $index->render($uriPath);
 	}
 
+	/**
+	 * return the sitemap index as string in case of memory mode, or write to targets.
+	 *
+	 * @return string
+	 */
 	public function __toString(): string
 	{
 		return $this->render();
@@ -215,7 +218,7 @@ class Sitemap implements SitemapBuilderInterface
 			throw new SitemapException("The sitemap {$options['name']} already registred!");
 		}
 
-		if (is_array($args[1]) === false && is_callable($args[1]) === false && ($args[1] instanceof Traversable) === false) {
+		if (is_array($args[1]) === false && is_callable($args[1]) === false && ($args[1] instanceof \Traversable) === false) {
 			 throw new SitemapException("{$alias}() Argument[1] must be array, callable, or Traversable");
 		}
 

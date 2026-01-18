@@ -2,6 +2,7 @@
 namespace Melbahja\Seo;
 
 use Melbahja\Seo\Interfaces\SchemaInterface;
+use Melbahja\Seo\Schema\Thing;
 
 /**
  * @package Melbahja\Seo

@@ -1,5 +1,5 @@
 <?php
-namespace Melbahja\Utils;
+namespace Melbahja\Seo\Utils;
 
 /**
  * @package Melbahja\Seo
@@ -52,11 +52,15 @@ class HttpClient
 
 		$headers = array_merge($this->headers, $headers);
 		$headersList = [];
+		$hasUAgent = false;
+
 		foreach ($headers as $key => $value)
 		{
-			// Just skip it!
-			if ($isJson && strtolower($key) === 'content-type') {
-				continue;
+			$key = strtolower($key);
+			if ($isJson && $key === 'content-type') {
+				continue; // if we have json payload we must have json ctype!
+			} else if ($key === 'user-agent') {
+				$hasUAgent = true;
 			}
 			$headersList[] = "$key: $value";
 		}
@@ -64,6 +68,11 @@ class HttpClient
 		if ($isJson) {
 			$headersList[] = "content-type: application/json";
 		}
+
+		if ($hasUAgent === false) {
+			$headersList[] = "user-agent: phpseo/v3 (+http://git.io/phpseo)";
+		}
+
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headersList);
 
 		$response = curl_exec($ch);

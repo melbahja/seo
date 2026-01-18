@@ -1,8 +1,6 @@
 <?php
 namespace Melbahja\Seo\Validation;
 
-use \Stringable;
-
 /**
  * Simple robots.txt rules validator
  *
@@ -19,9 +17,9 @@ class RobotsValidator
 	 * @param string|Stringable $rules robots.txt file content
 	 * @return array|null Array of errors or null if valid
 	 */
-	public static function validate(string|Stringable $rules): ?array
+	public static function validate(string|\Stringable $rules): ?array
 	{
-		if ($rules instanceof Stringable) {
+		if ($rules instanceof \Stringable) {
 			$rules = (string) $rules;
 		}
 
@@ -60,6 +58,7 @@ class RobotsValidator
 			switch ($direc)
 			{
 				case 'user-agent':
+
 					if (empty($value)) {
 						$errors[] = "Line $realLine: User-agent cannot be empty";
 					}
@@ -70,6 +69,7 @@ class RobotsValidator
 
 				case 'disallow':
 				case 'allow':
+
 					if ($currentAgent === null) {
 						$errors[] = "Line $realLine: $direc must come after User-agent";
 					}
@@ -79,6 +79,7 @@ class RobotsValidator
 					break;
 
 				case 'crawl-delay':
+
 					if ($currentAgent === null) {
 						$errors[] = "Line $realLine: Crawl-delay must come after User-agent";
 					}
@@ -88,6 +89,7 @@ class RobotsValidator
 					break;
 
 				case 'sitemap':
+
 					if (!filter_var($value, FILTER_VALIDATE_URL)) {
 						$errors[] = "Line $realLine: Invalid sitemap URL";
 					}

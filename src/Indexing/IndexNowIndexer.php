@@ -1,10 +1,12 @@
 <?php
 namespace Melbahja\Seo\Indexing;
 
-use \RuntimeException;
-use \InvalidArgumentException;
-use Melbahja\Seo\Utils\HttpClient;
-use Melbahja\Seo\Interfaces\SeoInterface;
+
+use Melbahja\Seo\{
+	Utils\HttpClient,
+	Interfaces\SeoInterface,
+	Exceptions\SeoException
+};
 
 /**
  * @package Melbahja\Seo
@@ -12,7 +14,7 @@ use Melbahja\Seo\Interfaces\SeoInterface;
  * @license MIT
  * @copyright Mohamed Elbahja
  */
-class IndexNowIndexer
+class IndexNowIndexer implements SeoInterface
 {
 	private string $apiKey;
 	private HttpClient $httpClient;
@@ -20,7 +22,7 @@ class IndexNowIndexer
 	public function __construct(string $apiKey, ?HttpClient $httpClient = null)
 	{
 		if (empty($apiKey)) {
-			throw new InvalidArgumentException('API key cannot be empty');
+			throw new SeoException('API key cannot be empty');
 		}
 
 		$this->apiKey     = $apiKey;
@@ -35,11 +37,10 @@ class IndexNowIndexer
 	 * @param URLIndexingType $type The type of indexing operation not needed now y can just send new or 404 urls
 	 * @return bool true on successful, false on failure.
 	 */
-	public function submitUrl(string $url, ?IndexNowEngine $engine = null, URLIndexingType $type = URLIndexingType::UPDATE): bool
+	public function submitUrl(string $url, IndexNowEngine $eng = IndexNowEngine::INDEXNOW, URLIndexingType $type = URLIndexingType::UPDATE): bool
 	{
-		$engine = $engine ?? IndexNowEngine::INDEXNOW;
-
-		return $this->sendRequest($engine->toUrl($url, $this->apiKey));
+		$this->httpClient->request('GET', $eng->toUrl($url, $this->apiKey));
+		return $this->httpClient->getStatusCode() < 400;
 	}
 
 	/**
@@ -50,12 +51,12 @@ class IndexNowIndexer
 	 * @param URLIndexingType $type The type of indexing operation not needed now y can just send new or 404 urls
 	 * @return array associative, URLs as keys and values as bool success state
 	 */
-	public function submitUrls(array $urls, ?IndexNowEngine $engine = null, URLIndexingType $type = URLIndexingType::UPDATE): array
+	public function submitUrls(array $urls, IndexNowEngine $eng = IndexNowEngine::INDEXNOW, URLIndexingType $type = URLIndexingType::UPDATE): array
 	{
 		$results = [];
 		foreach ($urls as $url)
 		{
-			$results[$url] = $this->submitUrl($url, $engine, $type);
+			$results[$url] = $this->submitUrl($url, $eng, $type);
 		}
 
 		return $results;
@@ -79,7 +80,7 @@ class IndexNowIndexer
 
 			http_response_code(404);
 			header('Content-Type: text/plain');
-			echo 'Key file not found';
+			echo 'Page not found';
 			exit;
 		}
 
@@ -87,18 +88,6 @@ class IndexNowIndexer
 		header('Cache-Control: no-cache, no-store, must-revalidate');
 		echo $this->apiKey;
 		exit;
-	}
-
-	/**
-	 * Send the request to indexnow API
-	 *
-	 * @param string $url The API URL to send the request
-	 * @return bool assumes sucess if status is less than 400, false otherwise
-	 */
-	private function sendRequest(string $url): bool
-	{
-		$this->httpClient->request('GET', $url);
-		return $this->httpClient->getStatusCode() < 400;
 	}
 
 	/**

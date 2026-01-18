@@ -187,11 +187,7 @@ class LinksBuilder implements SitemapBuilderInterface
 			throw new SitemapException("The maximum urls has been exhausted");
 		}
 
-		if (str_contains($url, '://') === false) {
-			$url = $this->baseUrl . ($url[0] !== '/' ? "/{$url}" : $url);
-		}
-
-		$this->url['loc'] = Utils::encodeSitemapUrl($url);
+		$this->url['loc'] = Utils::encodeSitemapUrl(Utils::resolveRelativeUrl($this->baseUrl, $url));
 		return $this;
 	}
 
@@ -203,11 +199,7 @@ class LinksBuilder implements SitemapBuilderInterface
 	 */
 	public function alternate(string $url, string $lang): self
 	{
-		if (str_contains($url, '://') === false) {
-			$url = $this->baseUrl . ($url[0] !== '/' ? "/{$url}" : $url);
-		}
-
-		$this->url['alternate'][] = [Utils::encodeSitemapUrl($url), $lang];
+		$this->url['alternate'][] = [$url, $lang]; // encoded and escaped in commit
 		return $this;
 	}
 
@@ -233,6 +225,7 @@ class LinksBuilder implements SitemapBuilderInterface
 			$this->priority($url->priority);
 		}
 
+		// I assume you're using a news builder!
 		if ($url->news !== null) {
 			$this->news($url->news);
 		}
@@ -292,9 +285,29 @@ class LinksBuilder implements SitemapBuilderInterface
 
 					foreach ($vid as $key => $val)
 					{
+						// multiple video nodes
+						// like multi <restriction /><restriction />
+						if (is_array($val) && array_is_list($val)) {
+
+							foreach ($val as $item)
+							{
+								$item = is_array($item) ? $item : ['value' => $item];
+
+								$this->writer->startElementNs('video', $key, null);
+								foreach (($item['attrs'] ?? []) as $attr => $aVal)
+								{
+									$this->writer->writeAttribute($attr, $aVal);
+								}
+								$this->writeText($item['value'], 'video:' . $key);
+								$this->writer->endElement();
+							}
+							continue;
+						}
+
 						$val = is_array($val) ? $val : ['value' => $val];
 
 						$this->writer->startElementNs('video', $key, null);
+
 						foreach (($val['attrs'] ?? []) as $attr => $aVal)
 						{
 							$this->writer->writeAttribute($attr, $aVal);
@@ -338,7 +351,7 @@ class LinksBuilder implements SitemapBuilderInterface
 				{
 					$this->writer->startElementNs('xhtml', 'link', null);
 					$this->writer->writeAttribute('rel', 'alternate');
-					$this->writer->writeAttribute('href', Utils::encodeSitemapUrl($alt[0]));
+					$this->writer->writeAttribute('href', Utils::encodeSitemapUrl(Utils::resolveRelativeUrl($this->baseUrl, $alt[0])));
 					$this->writer->writeAttribute('hreflang', $alt[1]);
 					$this->writer->endElement();
 				}
@@ -363,7 +376,7 @@ class LinksBuilder implements SitemapBuilderInterface
 	 */
 	public function lastMod(string|int $date): self
 	{
-		$this->url['lastmod'] = $this->parseDate($date);
+		$this->url['lastmod'] = Utils::formatDate($date);
 		return $this;
 	}
 
@@ -377,7 +390,7 @@ class LinksBuilder implements SitemapBuilderInterface
 		}
 
 		$this->url['image'][] = array_merge($options, [
-			'loc' => $this->getByRelativeUrl($imageUrl),
+			'loc' => Utils::resolveRelativeUrl($this->baseUrl, $imageUrl),
 		]);
 
 		return $this;
@@ -415,7 +428,7 @@ class LinksBuilder implements SitemapBuilderInterface
 			throw new SitemapException("Raw video url content_loc or player_loc embed is required");
 		}
 
-		$options['thumbnail_loc'] = $this->getByRelativeUrl($options['thumbnail_loc']);
+		$options['thumbnail_loc'] = Utils::resolveRelativeUrl($this->baseUrl, $options['thumbnail_loc']);
 		$this->url['video'][] = $options;
 
 		return $this;
@@ -490,38 +503,11 @@ class LinksBuilder implements SitemapBuilderInterface
 
 
 	/**
-	 * Get XML as string in case of memory mode
+	 * Get XML as string in case of memory mode, or write to target.
 	 */
 	public function __toString(): string
 	{
 		return $this->render();
-	}
-
-	/**
-	 * Fix relative urls
-	 * TODO: move to utils.
-	 */
-	protected function getByRelativeUrl(string $url): string
-	{
-		if (str_contains($url, '://') === false) {
-			return $this->baseUrl . ($url[0] !== '/' ? "/{$url}" : $url);
-		}
-
-		return $url;
-	}
-
-	/**
-	 * Convert date to ISO8601 format
-	 */
-	protected function parseDate(string|int $date): string
-	{
-		$timestamp = is_int($date) ? $date : strtotime($date);
-
-		if ($timestamp === false) {
-			throw new SitemapException("Invalid date format: {$date}");
-		}
-
-		return date('c', $timestamp);
 	}
 
 	/**
@@ -531,19 +517,17 @@ class LinksBuilder implements SitemapBuilderInterface
 	 * @param string $key       element name
 	 * @param mixed  $value     element value
 	 */
-	protected function writeElement(string $namespace, string $key, mixed $value): void
+	protected function writeElement(string $namespace, string $key, mixed $value): bool
 	{
-		$fullKey = "{$namespace}:{$key}";
 
-		if ($this->shouldUseCData($fullKey, $value)) {
+		if ($this->shouldUseCData("{$namespace}:{$key}", $value)) {
 
 			$this->writer->startElementNs($namespace, $key, null);
 			$this->writer->writeCData((string) $value);
-			$this->writer->endElement();
-			return;
+			return $this->writer->endElement();
 		}
 
-		$this->writer->writeElementNs($namespace, $key, null, (string) $value);
+		return $this->writer->writeElementNs($namespace, $key, null, (string) $value);
 	}
 
 	/**
@@ -567,18 +551,19 @@ class LinksBuilder implements SitemapBuilderInterface
 	protected function shouldUseCData(string $field, mixed $value = null): bool
 	{
 		if (in_array($field, $this->options['cdata'], true)) {
-
 			return true;
+		}
 
-		} else if ($value === null) {
-
+		if ($value === null || ($value = (string) $value) === '') {
 			return false;
 		}
 
-		$value = (string) $value;
 		return str_contains($value, '<') || str_contains($value, '>') || str_contains($value, '&');
 	}
 
+	/**
+	 * Cleanup
+	 */
 	public function __destruct()
 	{
 		if (isset($this->tempPath) && file_exists($this->tempPath)) {

@@ -296,6 +296,7 @@ class SchemaValidator
 		switch ($type)
 		{
 			case 'string':
+
 				if (!is_string($value)) {
 					$errors[] = "must be a string";
 				}
@@ -303,12 +304,14 @@ class SchemaValidator
 
 			case 'int':
 			case 'integer':
+
 				if (!is_int($value) && !is_numeric($value)) {
 					$errors[] = "must be an integer";
 				}
 				break;
 
 			case 'float':
+
 				if (!is_float($value) && !is_int($value) && !is_numeric($value)) {
 					$errors[] = "must be a float";
 				}
@@ -316,30 +319,35 @@ class SchemaValidator
 
 			case 'bool':
 			case 'boolean':
+
 				if (!is_bool($value) && $value != 'true' && $value != 'false') {
 					$errors[] = "must be a boolean";
 				}
 				break;
 
 			case 'array':
+
 				if (!is_array($value)) {
 					$errors[] = "must be an array";
 				}
 				break;
 
 			case 'iso_date':
+
 				if (!is_string($value) || !preg_match('/^\d{4}-\d{2}-\d{2}/', $value)) {
 					$errors[] = "must be a valid ISO date (YYYY-MM-DD)";
 				}
 				break;
 
 			case 'url':
+
 				if (!is_string($value) || !filter_var($value, FILTER_VALIDATE_URL)) {
 					$errors[] = "must be a valid URL";
 				}
 				break;
 
 			case 'email':
+
 				if (!is_string($value) || !filter_var($value, FILTER_VALIDATE_EMAIL)) {
 					$errors[] = "must be a valid email";
 				}
@@ -406,7 +414,6 @@ class SchemaValidator
 
 	private static function isEmpty($value): bool
 	{
-
 		if (is_array($value)) {
 			return empty($value);
 		} else if (is_string($value)) {

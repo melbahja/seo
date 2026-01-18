@@ -1,8 +1,8 @@
 <?php
 namespace Melbahja\Seo\Utils;
 
-use Traversable,
-	IteratorAggregate;
+
+use Melbahja\Seo\Exceptions\SeoException;
 
 
 /**
@@ -83,19 +83,48 @@ class Utils
 	 * @param  callable $func  must have yields
 	 * @return Traversable
 	 */
-	static function generator(callable $func): Traversable
+	public static function generator(callable $func): \Traversable
 	{
-		return new class($func) implements IteratorAggregate
+		return new class($func) implements \IteratorAggregate
 		{
-			public function __construct(
-				private readonly mixed $callable
-			){}
+			public function __construct(private readonly mixed $callable){}
 
-			public function getIterator(): Traversable
+			public function getIterator(): \Traversable
 			{
 				return ($this->callable)();
 			}
 		};
 	}
-}
 
+	/**
+	 * Resolve a relative URL against a base URL.
+	 *
+	 * @param string $baseUrl
+	 * @param string $url     relative or absolute URL.
+	 * @return string         absolute URL.
+	 */
+	public static function resolveRelativeUrl(string $baseUrl, string $url): string
+	{
+		if (str_contains($url, '://') === false) {
+			return rtrim($baseUrl, '/') . ($url[0] !== '/' ? "/{$url}" : $url);
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Normalize a date value to ISO 8601 format.
+	 *
+	 * @param string|int $date
+	 * @return string ISO 8601 date.
+	 * @throws SeoException if the format is invalid.
+	 */
+	public static function formatDate(string|int $date): string
+	{
+		if (($timestamp = is_int($date) ? $date : strtotime($date)) !== false) {
+			return date('c', $timestamp);
+		}
+
+		throw new SeoException("Invalid date format: {$date}");
+	}
+}

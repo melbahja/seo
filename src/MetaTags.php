@@ -172,10 +172,7 @@ class MetaTags implements SeoInterface
 	 */
 	public function amp(string $url): self
 	{
-		return $this->push('link', [
-			'rel' => 'amphtml',
-			'href' => $url
-		]);
+		return $this->push('link', ['rel' => 'amphtml', 'href' => $url]);
 	}
 
 	/**
@@ -250,10 +247,7 @@ class MetaTags implements SeoInterface
 	 */
 	public function meta(string $name, string $value): self
 	{
-		return $this->push('meta', [
-			'name'    => $name,
-			'content' => $value,
-		]);
+		return $this->push('meta', ['name' => $name,'content' => $value]);
 	}
 
 	/**
@@ -309,10 +303,7 @@ class MetaTags implements SeoInterface
 	 */
 	public function shortlink(string $url): self
 	{
-		return $this->push('link', [
-			'rel' => 'shortlink',
-			'href' => $url
-		]);
+		return $this->push('link', ['rel' => 'shortlink', 'href' => $url]);
 	}
 
 	/**

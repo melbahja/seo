@@ -1,10 +1,12 @@
 <?php
 namespace Melbahja\Seo\Indexing;
 
-use \RuntimeException;
-use \InvalidArgumentException;
-use Melbahja\Seo\Utils\HttpClient;
-use Melbahja\Seo\Interfaces\SeoInterface;
+
+use Melbahja\Seo\{
+	Utils\HttpClient,
+	Interfaces\SeoInterface,
+	Exceptions\SeoException
+};
 
 /**
  * @package Melbahja\Seo
@@ -12,7 +14,7 @@ use Melbahja\Seo\Interfaces\SeoInterface;
  * @license MIT
  * @copyright Mohamed Elbahja
  */
-class GoogleIndexer
+class GoogleIndexer implements SeoInterface
 {
 	private string $accessToken;
 
@@ -23,12 +25,11 @@ class GoogleIndexer
 	public function __construct(string $accessToken, ?HttpClient $httpClient = null)
 	{
 		if (empty($accessToken)) {
-			throw new InvalidArgumentException('Access token cannot be empty');
+			throw new SeoException('Access token cannot be empty');
 		}
 
 		$this->accessToken = $accessToken;
-		$this->httpClient  = $httpClient ?? new HttpClient(null,
-		[
+		$this->httpClient  = $httpClient ?? new HttpClient(headers: [
 			'Authorization' => "Bearer {$this->accessToken}",
 			'Content-Type' => 'application/json'
 		]);
@@ -37,7 +38,7 @@ class GoogleIndexer
 	/**
 	 * Submit multiple URLs to google indexing API
 	 *
-	 * @todo  Nice to support batch operation later.
+	 * @todo  Nice to support BATCH operation later.
 	 * @param array $urls list of URLs to submit for indexing
 	 * @param URLIndexingType $type The type of indexing operation UPDATE or DELETE
 	 * @return array associative, URLs as keys and values as bool success state
@@ -75,24 +76,24 @@ class GoogleIndexer
 	 * Not supported - this is just for IndexNow compatibility!
 	 *
 	 * @return never This method always throws an exception
-	 * @throws RuntimeException Always throws as Google doesn't use this verification method
+	 * @throws SeoException Always throws as Google doesn't use this verification method
 	 */
 	public function serveKeyFile(): never
 	{
-		throw new RuntimeException('Google Indexing API does not use key.txt verification');
+		throw new SeoException('Google Indexing API does not use key.txt verification');
 	}
 
 	/**
 	 * Create an GoogleIndexer instance from environment variable
 	 *
-	 * @param string $envVar The name of the env var of the API key, INDEXNOW_API_KEY by default.
+	 * @param string $envVar The name of the env var of the API key, GOOGLE_INDEXING_ACCESS_TOKEN by default.
 	 * @return self New GoogleIndexer instance
-	 * @throws RuntimeException If the environment variable is not set or empty
+	 * @throws SeoException If the environment variable is not set or empty
 	 */
 	public static function fromEnvironment(string $envVar = 'GOOGLE_INDEXING_ACCESS_TOKEN'): self
 	{
 		if (!($token = $_ENV[$envVar] ?? getenv($envVar))) {
-			throw new RuntimeException("Google Indexing API access token not found in env var: {$envVar}");
+			throw new SeoException("Google Indexing API access token not found in env var: {$envVar}");
 		}
 
 		return new self($token);

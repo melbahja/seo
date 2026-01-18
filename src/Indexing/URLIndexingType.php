@@ -1,7 +1,6 @@
 <?php
 namespace Melbahja\Seo\Indexing;
 
-
 /**
  * @package Melbahja\Seo
  * @see https://git.io/phpseo
