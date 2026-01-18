@@ -1,18 +1,23 @@
 {
 	"name": "melbahja/seo",
 	"type": "library",
-	"description": "Simple PHP library to help developers 🍻 do better on-page SEO optimization",
+	"description": "SEO library for PHP is a simple PHP library to help developers 🍻 do better on-page SEO optimizations.",
 	"keywords": [
 		"seo", 
 		"search engine optimization", 
-		"php7",
+		"php8",
 		"schema.org",
 		"sitemaps", 
 		"sitemap.xml", 
 		"sitemap index",
 		"meta tags",
 		"open graph",
-		"twitter tags"
+		"twitter tags",
+		"rich results",
+		"images sitemaps",
+		"video sitemaps",
+		"index sitemaps",
+		"news sitemaps"
 	],
 	"license": "MIT",
 	"authors": [
@@ -32,11 +37,6 @@
 	"autoload": {
 		"psr-4": {
 			"Melbahja\\Seo\\": "src/"
-		}
-	},
-	"autoload-dev": {
-		"psr-4":{
-			"Tests\\Melbahja\\Seo\\": "tests/"
 		}
 	},
 	"require-dev": {

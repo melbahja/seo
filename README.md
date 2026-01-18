@@ -1,16 +1,22 @@
-# PHP SEO 
-[![Build Status](https://github.com/melbahja/seo/workflows/Test/badge.svg)](https://github.com/melbahja/seo/actions?query=workflow%3ATest) [![GitHub license](https://img.shields.io/github/license/melbahja/seo)](https://github.com/melbahja/seo/blob/master/LICENSE) ![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/melbahja/seo) ![Packagist Version](https://img.shields.io/packagist/v/melbahja/seo) [![Twitter](https://img.shields.io/twitter/url/https/github.com/melbahja/seo.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fmelbahja%2Fseo)
+# PHP SEO
 
-Simple PHP library to help developers 🍻 do better on-page SEO optimization
+The SEO library for PHP is a simple and powerful PHP library to help developers 🍻 do better on-page SEO optimizations.
+
+[![Build Status](https://github.com/melbahja/seo/workflows/Test/badge.svg)](https://github.com/melbahja/seo/actions?query=workflow%3ATest)
+[![GitHub license](https://img.shields.io/github/license/melbahja/seo)](https://github.com/melbahja/seo/blob/master/LICENSE)
+![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/melbahja/seo)
+![Packagist Version](https://img.shields.io/packagist/v/melbahja/seo)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/melbahja/seo.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fmelbahja%2Fseo)
+
 
 ### PHP SEO features:
 
-- [[👷]](#-generate-schemaorg) **Generate schema.org ld+json**
-- [[🛀]](#-meta-tags) **Generate meta tags with twitter and open graph support**
-- [[🌐]](#-sitemaps) **Generate sitemaps xml and indexes (supports: 🖺 news, 🖼 images, 📽 videos)**
-- [[📤]](#-send-sitemaps-to-search-engines) **Submit new sitemaps to search engines**
-- [[📤]](#-indexing-api) **Indexing API**
-- [[🙈]](https://github.com/melbahja/seo/blob/master/composer.json) **No dependencies**
+- [[👷]](#-generate-schemaorg) **Generate Rich Results schema.org ld+json**
+- [[🛀]](#-meta-tags) **Generate Meta Tags with Twitter and Open Graph Support**
+- [[🌐]](#-sitemaps) **Generate XML Sitemaps (supports: 🖺 News Sitemaps, 🖼 Images Sitemaps, 📽 Video Sitemaps, Index Sitemaps)**
+- [[📤]](#-indexing-api) **IndexNow and Google Indexing API**
+- [✅] **Schema Rich Results Validator**
+- [[🧩]](https://github.com/melbahja/seo/blob/master/composer.json) **Zero Dependencies**
 
 ## Installation:
 ```bash
@@ -18,19 +24,20 @@ composer require melbahja/seo
 ```
 
 ## Usage:
-Check this simple examples. (of course the composer autoload.php file is required)
 
+Check this simple examples.
 
 #### 👷 Generate schema.org
 ```php
 use Melbahja\Seo\Schema;
 use Melbahja\Seo\Schema\Thing;
+use Melbahja\Seo\Schema\Organization;
 
 $schema = new Schema(
-    new Thing('Organization', [
+    new Organization([
         'url'          => 'https://example.com',
         'logo'         => 'https://example.com/logo.png',
-        'contactPoint' => new Thing('ContactPoint', [
+        'contactPoint' => new Thing(type: 'ContactPoint', props: [
             'telephone' => '+1-000-555-1212',
             'contactType' => 'customer service'
         ])
@@ -44,21 +51,16 @@ echo $schema;
 ```html
 <script type="application/ld+json">
 {
+  "@type": "Organization",
   "@context": "https://schema.org",
-  "@graph": [
-    {
-      "url": "https://example.com",
-      "logo": "https://example.com/logo.png",
-      "contactPoint": {
-        "telephone": "+1-000-555-1212",
-        "contactType": "customer service",
-        "@type": "ContactPoint",
-        "@context": "https://schema.org/"
-      },
-      "@type": "Organization",
-      "@context": "https://schema.org/"
-    }
-  ]
+  "url": "https://example.com",
+  "logo": "https://example.com/logo.png",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "@context": "https://schema.org",
+    "telephone": "+1-000-555-1212",
+    "contactType": "customer service"
+  }
 }
 </script>
 ```
@@ -66,20 +68,21 @@ echo $schema;
 ```php
 use Melbahja\Seo\Schema;
 use Melbahja\Seo\Schema\Thing;
+use Melbahja\Seo\Schema\CreativeWork\WebPage;
 
-$product = new Thing('Product');
+$product = new Thing(type: 'Product');
 $product->name  = "Foo Bar";
 $product->sku   = "sk12";
 $product->image = "/image.jpeg";
 $product->description = "testing";
-$product->offers = new Thing('Offer', [
+$product->offers = new Thing(type: 'Offer', props: [
     'availability' => 'https://schema.org/InStock',
     'priceCurrency' => 'USD',
     "price" => "119.99",
     'url' => 'https://gool.com',
 ]);
 
-$webpage = new Thing("WebPage", [
+$webpage = new WebPage([
     '@id' => "https://example.com/product/#webpage",
     'url' => "https://example.com/product",
     'name' => 'Foo Bar',
@@ -93,35 +96,36 @@ $schema = new Schema(
 
 echo json_encode($schema, JSON_PRETTY_PRINT);
 ```
+
 **Results:**
 ```json
 {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "name": "Foo Bar",
-      "sku": "sk12",
-      "image": "/image.jpeg",
-      "description": "testing",
-      "offers": {
-        "availability": "https://schema.org/InStock",
-        "priceCurrency": "USD",
-        "price": "119.99",
-        "url": "https://gool.com",
-        "@type": "Offer",
-        "@context": "https://schema.org/"
-      },
-      "@type": "Product",
-      "@context": "https://schema.org/"
-    },
-    {
-      "@id": "https://example.com/product/#webpage",
-      "url": "https://example.com/product",
-      "name": "Foo Bar",
-      "@type": "WebPage",
-      "@context": "https://schema.org/"
-    }
-  ]
+    "@context": "https:\/\/schema.org",
+    "@graph": [
+        {
+            "@type": "Product",
+            "@context": "https:\/\/schema.org",
+            "name": "Foo Bar",
+            "sku": "sk12",
+            "image": "\/image.jpeg",
+            "description": "testing",
+            "offers": {
+                "@type": "Offer",
+                "@context": "https:\/\/schema.org",
+                "availability": "https:\/\/schema.org\/InStock",
+                "priceCurrency": "USD",
+                "price": "119.99",
+                "url": "https:\/\/gool.com"
+            }
+        },
+        {
+            "@type": "WebPage",
+            "@context": "https:\/\/schema.org",
+            "@id": "https:\/\/example.com\/product\/#webpage",
+            "url": "https:\/\/example.com\/product",
+            "name": "Foo Bar"
+        }
+    ]
 }
 ```
 
@@ -135,12 +139,21 @@ $metatags = new MetaTags();
 $metatags
         ->title('PHP SEO')
         ->description('This is my description')
-        ->meta('author', 'Mohamed Elabhja')
+        ->meta('author', 'Mohamed Elbahja')
         ->image('https://avatars3.githubusercontent.com/u/8259014')
         ->mobile('https://m.example.com')
         ->canonical('https://example.com')
         ->shortlink('https://git.io/phpseo')
-        ->amp('https://apm.example.com');
+        ->amp('https://apm.example.com')
+        ->robots(['index', 'follow', 'max-snippet' => -1])
+        ->robots(botName: 'bingbot', options: ['index', 'nofollow'])
+        ->feed("https://example.com/feed.rss")
+        ->verification("google", "token_value")
+        ->verification("yandex", "token_value")
+        ->hreflang("de", "https://de.example.com")
+        ->og("type", "website")
+        ->twitter("creator", "Mohamed Elbahja");
+        // ->schema($schema)
 
 echo $metatags;
 
@@ -151,400 +164,265 @@ echo $metatags;
 <title>PHP SEO</title>
 <meta name="title" content="PHP SEO" />
 <meta name="description" content="This is my description" />
-<meta name="author" content="Mohamed Elabhja" />
+<meta name="author" content="Mohamed Elbahja" />
+<meta name="robots" content="index, follow, max-snippet:-1" />
+<meta name="bingbot" content="index, nofollow" />
+<meta name="google-site-verification" content="token_value" />
+<meta name="yandex-site-verification" content="token_value" />
 <link href="https://m.example.com" rel="alternate" media="only screen and (max-width: 640px)" />
 <link rel="canonical" href="https://example.com" />
 <link rel="shortlink" href="https://git.io/phpseo" />
 <link rel="amphtml" href="https://apm.example.com" />
+<link rel="alternate" type="application/rss+xml" href="https://example.com/feed.rss" />
+<link rel="alternate" href="https://de.example.com" hreflang="de" />
+<meta property="og:title" content="PHP SEO" />
+<meta property="og:description" content="This is my description" />
+<meta property="og:image" content="https://avatars3.githubusercontent.com/u/8259014" />
+<meta property="og:type" content="website" />
 <meta property="twitter:title" content="PHP SEO" />
 <meta property="twitter:description" content="This is my description" />
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="https://avatars3.githubusercontent.com/u/8259014" />
-<meta property="og:title" content="PHP SEO" />
-<meta property="og:description" content="This is my description" />
-<meta property="og:image" content="https://avatars3.githubusercontent.com/u/8259014" />
+<meta property="twitter:creator" content="Mohamed Elbahja" />
 ```
 
 
-#### 🗺 Sitemaps
-```php
-$yourmap = new Sitemap(string $url, array $options = []): SitemapIndexInterface
-```
-| Option name   | Description                                       | Required ?    | Default       |
-| ------------- | -------------                                     | ---------     | --------      |
-| save_path     | Generated sitemaps storage path                   | YES           |               |
-| sitemaps_url  | Sitemap index custom url for generated sitemaps   | NO            | $url          |
-| index_name    | Custom sitemap index name                         | NO            | sitemap.xml   |
+# 🗺 Sitemaps
 
-##### Simple Example
+Generate XML sitemaps with support for images, videos, news, and localized URLs.
+
+## Basic Usage
+
 ```php
 use Melbahja\Seo\Sitemap;
 
-$sitemap = new Sitemap('https://example.com', ['save_path' => '/path/to_save/files']);
+$sitemap = new Sitemap(
+    baseUrl: 'https://example.com',
+    saveDir: '/path/to_save/files',
+);
 
 $sitemap->links('blog.xml', function($map)
 {
-    $map->loc('/blog')->freq('daily')->priority('0.8')
-        ->loc('/blog/my-new-article')->freq('weekly')->lastMod('2019-03-01')
-        ->loc('/اهلا-بالعالم')->freq('weekly');
-    $map->loc('/blog/hello')->freq('monthly');
+    $map->loc('/blog')
+            ->changeFreq('daily')
+            ->priority(0.8)
+            ->loc('/blog/my-new-article')
+            ->changeFreq('weekly')
+            ->lastMod('2024-01-15')
+            ->loc('/اهلا-بالعالم')
+            ->changeFreq('weekly');
+
+    $map->loc('/blog/hello')->changeFreq('monthly');
 });
 
-// return bool
-// throws SitemapException if save_path options not exists
-$sitemap->save();
+$sitemap->render();
 ```
 
-**Results:** (📂 in: /path/to_save/files/)
+## Options
 
-📁: sitemap.xml (formatted)
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated by https://git.io/phpseo -->
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <sitemap>
-        <loc>https://example.com/blog.xml</loc>
-        <lastmod>2019-03-01T14:38:02+01:00</lastmod>
-    </sitemap>
-</sitemapindex>
-```
+| Option | Description | Required | Default |
+| --- | --- | --- | --- |
+| `saveDir` | Generated sitemaps storage path | Yes | \-  |
+| `sitemapBaseUrl` | Custom URL for generated sitemaps | No  | Base URL |
+| `indexName` | Custom sitemap index name | No  | sitemap.xml |
+| `mode` | Output mode (FILE, MEMORY, STREAM, TEMP) | No  | TEMP |
 
-📁: blog.xml (formatted)
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated by https://git.io/phpseo -->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-      <loc>https://example.com/blog</loc>
-      <changefreq>daily</changefreq>
-      <priority>0.8</priority>
-    </url>
-    <url>
-      <loc>https://example.com/blog/my-new-article</loc>
-      <changefreq>weekly</changefreq>
-      <lastmod>2019-03-01T00:00:00+01:00</lastmod>
-    </url>
-    <url>
-      <loc>https://example.com/%D8%A7%D9%87%D9%84%D8%A7-%D8%A8%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85</loc>
-      <changefreq>weekly</changefreq>
-    </url>
-    <url>
-      <loc>https://example.com/blog/hello</loc>
-      <changefreq>monthly</changefreq>
-    </url>
-</urlset>
-```
-
-##### Multipe Sitemaps && Images
-```php
-use Melbahja\Seo\Sitemap;
-
-$sitemap = new Sitemap('https://example.com');
-
-// Instead of passing save_path to the factory you can set it later via setSavePath
-// also $sitemap->getSavePath() method to get the current save_path
-$sitemap->setSavePath('your_save/path');
-
-// changing sitemap index name
-$sitemap->setIndexName('index.xml');
-
-// For images you need to pass a option images => true
-$sitemap->links(['name' => 'blog.xml', 'images' => true], function($map)
-{
-    $map->loc('/blog')->freq('daily')->priority('0.8')
-        ->loc('/blog/my-new-article')
-            ->freq('weekly')
-            ->lastMod('2019-03-01')
-            ->image('/uploads/image.jpeg', ['caption' => 'My caption'])
-        ->loc('/اهلا-بالعالم')->freq('weekly');
-
-    // image(string $url, array $options = []), image options: caption, geo_location, title, license
-    // see References -> images
-    $map->loc('/blog/hello')->freq('monthly')->image('https://cdn.example.com/image.jpeg');
-});
-
-// another file
-$sitemap->links('blog_2.xml', function($map)
-{
-    // Mabye you need to loop through posts form your database ?
-    foreach (range(0, 4) as $i)
-    {
-        $map->loc("/posts/{$i}")->freq('weekly')->priority('0.7');
-    }
-});
-
-$sitemap->save();
-
-```
-
-**Results**
-
-📁: index.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated by https://git.io/phpseo -->
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <sitemap>
-        <loc>https://example.com/blog.xml</loc>
-        <lastmod>2019-03-01T15:13:22+01:00</lastmod>
-    </sitemap>
-    <sitemap>
-        <loc>https://example.com/blog_2.xml</loc>
-        <lastmod>2019-03-01T15:13:22+01:00</lastmod>
-    </sitemap>
-</sitemapindex>
-
-```
-
-📁: blog.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated by https://git.io/phpseo -->
-<urlset
-    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-    xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-    <url>
-        <loc>https://example.com/blog</loc>
-        <changefreq>daily</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://example.com/blog/my-new-article</loc>
-        <changefreq>weekly</changefreq>
-        <lastmod>2019-03-01T00:00:00+01:00</lastmod>
-        <image:image>
-            <image:caption>My caption</image:caption>
-            <image:loc>https://example.com/uploads/image.jpeg</image:loc>
-        </image:image>
-    </url>
-    <url>
-        <loc>https://example.com/%D8%A7%D9%87%D9%84%D8%A7-%D8%A8%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85</loc>
-        <changefreq>weekly</changefreq>
-    </url>
-    <url>
-        <loc>https://example.com/blog/hello</loc>
-        <changefreq>monthly</changefreq>
-        <image:image>
-            <image:loc>https://cdn.example.com/image.jpeg</image:loc>
-        </image:image>
-    </url>
-</urlset>
-```
-
-📁: blog_2.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated by https://git.io/phpseo -->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://example.com/posts/0</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://example.com/posts/1</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://example.com/posts/2</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://example.com/posts/3</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://example.com/posts/4</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-</urlset>
-```
-
-##### Sitemap with videos
-```php
-$sitemap = (new Sitemap('https://example.com'))
-                ->setSavePath('./storage/sitemaps')
-                ->setSitemapsUrl('https://example.com/sitemaps')
-                ->setIndexName('index.xml');
-
-$sitemap->links(['name' => 'posts.xml', 'videos' => true], function($map)
-{
-    $map->loc('/posts/clickbait-video')->video('My Clickbait Video title',
-    [
-        // or thumbnail_loc
-        'thumbnail' => 'https://example.com/thumbnail.jpeg',
-        'description' => 'My description',
-        // player_loc or content_loc one of them is required
-        'player_loc' => 'https://example.com/embed/81287127'
-
-        // for all available options see References -> videos
-    ]);
-
-    $map->loc('posts/bla-bla');
-});
-
-$sitemap->save();
-```
-**Results**
-
-📁: index.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated by https://git.io/phpseo -->
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <sitemap>
-        <loc>https://example.com/sitemaps/posts.xml</loc>
-        <lastmod>2019-03-01T15:30:02+01:00</lastmod>
-    </sitemap>
-</sitemapindex>
-```
-**Note:** lastmod in sitemap index files are generated automatically
-
-📁: posts.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated by https://git.io/phpseo -->
-<urlset
-    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-    xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-    <url>
-        <loc>https://example.com/posts/clickbait-video</loc>
-        <video:video>
-            <video:description>My description</video:description>
-            <video:player_loc>https://example.com/embed/81287127</video:player_loc>
-            <video:title>My Clickbait Video title</video:title>
-            <video:thumbnail_loc>https://example.com/thumbnail.jpeg</video:thumbnail_loc>
-        </video:video>
-    </url>
-    <url>
-        <loc>https://example.com/posts/bla-bla</loc>
-    </url>
-</urlset>
-```
-
-##### News Sitemaps
+## URL Methods
 
 ```php
-use Melbahja\Seo\Factory;
+$builder->loc('/page')               // URL path relative or absolute
+        ->priority(0.8)              // Priority 0.0-1.0
+        ->changeFreq('weekly')       // always, hourly, daily, weekly, monthly, yearly, never
+        ->lastMod('2024-01-15')      // Last modified date in string or unix ts
+        ->image('/image.jpg')        // Add image (requires 'images' => true)
+        ->video('Title', [...])      // Add video (requires 'videos' => true)
+        ->alternate('/es/page', 'es'); // Add hreflang alternate
+```
 
-$sitemap = Factory::sitemap('https://example.com',
+## Advanced Features
+
+### Image Sitemaps
+
+```php
+$sitemap->links(['name' => 'gallery.xml', 'images' => true], function($builder)
+{
+    $builder->loc('/gallery/1')
+            ->image('/images/photo1.jpg', [
+                'title' => 'Photo Title',
+                'caption' => 'Photo caption'
+            ]);
+});
+```
+
+### Video Sitemaps
+
+```php
+$sitemap->links(['name' => 'videos.xml', 'videos' => true], function($builder)
+{
+    $builder->loc('/video/page')
+            ->video('Video Title', [
+                'thumbnail' => '/thumb.jpg',
+                'description' => 'Video description',
+                'content_loc' => '/video.mp4'
+            ]);
+});
+```
+
+### News Sitemaps
+
+```php
+use Melbahja\Seo\Sitemap\NewsBuilder;
+
+$sitemap->news('news.xml', function(NewsBuilder $builder)
+{
+    $builder->setPublication('Your News', 'en');
+
+    $builder->loc('/article/1')
+            ->news([
+                'title' => 'Article Title',
+                'publication_date' => '2024-01-15T10:00:00Z',
+                'keywords' => 'news, breaking'
+            ]);
+});
+```
+
+### Multilingual Sitemaps
+
+```php
+$sitemap->links(['name' => 'multilang.xml', 'localized' => true], function($builder)
+{
+    $builder->loc('/page')
+            ->alternate('/es/page', 'es')
+            ->alternate('/fr/page', 'fr');
+});
+```
+
+## Output Modes
+
+### TEMP Mode (Default)
+
+```php
+$sitemap = new Sitemap('https://example.com',
 [
-    // You can also customize your options by passing array to the factory like this
-    'save_path' => './path',
-    'sitemaps_url' => 'https://example.com/maps',
-    'index_name' => 'news_index.xml'
+    'saveDir' => './storage',
+    'mode' => OutputMode::TEMP
+]);
+$sitemap->render(); // Saves to temp dir and save to disk only on generation success.
+```
+
+### File Mode
+
+```php
+$sitemap = new Sitemap('https://example.com',
+[
+    'saveDir' => './storage',
+    'mode' => OutputMode::FILE
+]);
+$sitemap->render(); // Saves to disk
+```
+
+### Memory Mode
+
+```php
+$sitemap = new Sitemap('https://example.com', [
+    'mode' => OutputMode::MEMORY
+]);
+$xml = $sitemap->render(); // Returns XML string
+```
+
+### Stream Mode
+
+```php
+$stream = fopen('sitemap.xml', 'w');
+$builder = new LinksBuilder(
+    baseUrl: 'https://example.com',
+    stream: $stream, // defaults to stdout
+    mode: OutputMode::STREAM,
+);
+$builder->loc('/page')->render();
+fclose($stream);
+```
+
+## Complete Example
+
+```php
+$sitemap = new Sitemap(baseUrl: 'https://example.com', options: [
+    'saveDir' => './sitemaps',
+    'indexName' => 'sitemap-index.xml'
 ]);
 
-$sitemap->news('my_news.xml', function($map)
+// Regular pages y can just pass array of links
+$sitemap->links('pages.xml', ['/', '/about', '/contact']);
+
+// Products with images
+$sitemap->links(['name' => 'products.xml', 'images' => true], function($builder)
 {
-    // publication: name, language
-    // Google quote about the name: "It must exactly match the name as
-    // it appears on your articles on news.google.com"
-    $map->setPublication('PHP NEWS', 'en');
-
-    $map->loc('/news/12')->news(
-    [
-       'title' => 'PHP 8 Released',
-       'publication_date' => '2019-03-01T15:30:02+01:00',
-    ]);
-
-    $map->loc('/news/13')->news(
-    [
-        'title' => 'PHP 8 And High Performance',
-        'publication_date' => '2019-04-01T15:30:02+01:00'
-    ]);
+    $builder->loc('/product/123')
+            ->priority(0.9)
+            ->image('/product-main.jpg', ['title' => 'Product Image']);
 });
 
-$sitemap->save();
-```
+// News section
+$sitemap->news('news.xml', function($builder)
+{
+    $builder->setPublication('Tech News', 'en');
+    $builder->loc('/article/1')
+            ->news(['title' => 'New Article', 'publication_date' => date('c')]);
+});
 
-**Results**
-
-📁: news_index.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated by https://git.io/phpseo -->
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <sitemap>
-        <loc>https://example.com/maps/my_news.xml</loc>
-        <lastmod>2019-03-01T15:57:10+01:00</lastmod>
-    </sitemap>
-</sitemapindex>
-```
-
-📁: my_news.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated by https://git.io/phpseo -->
-<urlset
-    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-    xmlns:news="https://www.google.com/schemas/sitemap-news/0.9">
-    <url>
-        <loc>https://example.com/news/12</loc>
-        <news:news>
-            <news:publication>
-                <news:name>PHP NEWS</news:name>
-                <news:language>en</news:language>
-            </news:publication>
-            <news:title>PHP 8 Released</news:title>
-            <news:publication_date>2019-03-01T15:30:02+01:00</news:publication_date>
-        </news:news>
-    </url>
-    <url>
-        <loc>https://example.com/news/13</loc>
-        <news:news>
-            <news:publication>
-                <news:name>PHP NEWS</news:name>
-                <news:language>en</news:language>
-            </news:publication>
-            <news:title>PHP 8 And High Performance</news:title>
-            <news:publication_date>2019-04-01T15:30:02+01:00</news:publication_date>
-        </news:news>
-    </url>
-</urlset>
-```
-
-**Google quote:** ⚠ "If you submit your News sitemap before your site has been reviewed and approved by our team, you may receive errors." ⚠
-
-
-#### 🤖 Send Sitemaps To Search Engines
-
-According to the sitemaps protocol, search engines should have a url that allow you to inform them about your new sitemap files. like: <searchengine_URL>/ping?sitemap=sitemap_url
-
-```php
-use Melbahja\Seo\Ping;
-
-$ping = new Ping;
-
-// the void method send() will inform via CURL: google, bing and yandex about your new file
-$ping->send('https://example.com/sitemap_file.xml');
-
+// Generate everything
+$sitemap->render();
+// Creates: sitemap-index.xml, pages.xml, products.xml, news.xml
 ```
 
 ### Indexing API
 
-This is the first PHP library to support the new search engines indexing API (aka indexnow.org).
+Submit URLs to search engines for instant indexing using Google Indexing API and IndexNow protocol.
+
+#### Google Indexing API
 
 ```php
-use Melbahja\Seo\Indexing;
+use Melbahja\Seo\Indexing\GoogleIndexer;
+use Melbahja\Seo\Indexing\URLIndexingType;
 
-$indexer = new Indexing('www.example.cpm', [
-    'bing.com' => 'your_api_key_here',
-    'yandex.com' => 'your_api_key_here',
+$indexer = new GoogleIndexer('your-google-access-token');
+
+// Index single URL
+$indexer->submitUrl('https://www.example.com/page');
+
+// Index multiple URLs
+$indexer->submitUrls([
+    'https://www.example.com/page1',
+    'https://www.example.com/page2'
 ]);
 
-
-// index single url.
-$indexer->indexUrl('https://www.example.com/page');
-
-// index multi urls.
-$indexer->indexUrls(['https://www.example.com/page']);
-
+// Delete URL from index
+$indexer->submitUrl('https://www.example.com/deleted-page', URLIndexingType::DELETE);
 ```
+
+#### IndexNow Protocol
+
+```php
+use Melbahja\Seo\Indexing\IndexNowIndexer;
+
+$indexer = new IndexNowIndexer('your-indexnow-api-key');
+
+// Submit to all supported engines
+$indexer->submitUrl('https://www.example.com/page');
+
+// Submit multiple URLs
+$indexer->submitUrls([
+    'https://www.example.com/page1',
+    'https://www.example.com/page2'
+]);
+```
+
+## AI LLMs.txt Support
+
+LLMs.txt isn't an established industry standard (IMO training honypot), it's a newer format designed mainly to help bigtech companies train their AI models. from a SEO perspective I don't see clear benefits for webmasters at this time. if you find LLMs.txt valuable for your use case, contributions are welcome! feel free to submit a PR.
+
+## Documentation
+the docs are coming soon with more features and complete examples.
 
 ## Sponsors
 
@@ -563,4 +441,4 @@ Special thanks to friends who support this work financially:
 
 
 ## License
-[MIT](https://github.com/melbahja/seo/blob/master/LICENSE) Copyright (c) 2019-present Mohamed Elbahja
+[MIT](https://github.com/melbahja/seo/blob/master/LICENSE) Copyright (c) Mohamed Elbahja
