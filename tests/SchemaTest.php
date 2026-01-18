@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 use Melbahja\Seo\Schema;
 use Melbahja\Seo\Schema\Thing;
+use Melbahja\Seo\Schema\Product;
 use Melbahja\Seo\Schema\CreativeWork\WebPage;
 
 
@@ -27,17 +28,22 @@ class SchemaTest extends TestCase
 
 		$this->assertEquals('{"url":"https:\/\/example.com","logo":"https:\/\/example.com\/logo.png","name":"Example Org","contactPoint":{"telephone":"+1-000-555-1212","contactType":"customer service","@type":"ContactPoint","@context":"https:\/\/schema.org"},"@type":"Organization","@context":"https:\/\/schema.org"}', json_encode($schema));
 
-		$product = new Thing(type: 'Product');
+		$product = new Product();
 		$product->name  = "Foo Bar";
 		$product->sku   = "sk12";
-		$product->image = "/image.jpeg";
-		$product->description = "testing";
-		$product->offers = new Thing(type: 'Offer', props: [
-			'availability' => 'https://schema.org/InStock',
-			'priceCurrency' => 'USD',
-			"price" => "119.99",
-			'url' => 'https://gool.com',
-		]);
+
+		// in addition to __set() y can use __call()
+		$product->image("/image.jpeg")
+				->description("testing");
+
+		$product->offers(new Thing(type: 'Offer', props:
+			[
+				'availability' => 'https://schema.org/InStock',
+				'priceCurrency' => 'USD',
+				"price" => "119.99",
+				'url' => 'https://gool.com',
+			])
+		);
 
 		$webpage = new WebPage([
 			'@id' => "https://example.com/product/#webpage",
