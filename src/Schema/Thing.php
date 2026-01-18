@@ -89,11 +89,7 @@ class Thing implements SchemaInterface
 	 */
 	public function jsonSerialize(): array
 	{
-		return array_merge($this->props,
-		[
-			'@type'    => $this->type,
-			'@context' => $this->context,
-		]);
+		return array_merge(['@type' => $this->type, '@context' => $this->context], $this->props);
 	}
 
 	/**

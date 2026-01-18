@@ -26,7 +26,7 @@ class SchemaTest extends TestCase
 			])
 		);
 
-		$this->assertEquals('{"url":"https:\/\/example.com","logo":"https:\/\/example.com\/logo.png","name":"Example Org","contactPoint":{"telephone":"+1-000-555-1212","contactType":"customer service","@type":"ContactPoint","@context":"https:\/\/schema.org"},"@type":"Organization","@context":"https:\/\/schema.org"}', json_encode($schema));
+		$this->assertEquals('{"@type":"Organization","@context":"https:\/\/schema.org","url":"https:\/\/example.com","logo":"https:\/\/example.com\/logo.png","name":"Example Org","contactPoint":{"@type":"ContactPoint","@context":"https:\/\/schema.org","telephone":"+1-000-555-1212","contactType":"customer service"}}', json_encode($schema));
 
 		$product = new Product();
 		$product->name  = "Foo Bar";
@@ -58,7 +58,7 @@ class SchemaTest extends TestCase
 		);
 
 
-		$this->assertEquals('<script type="application/ld+json">{"@context":"https:\/\/schema.org","@graph":[{"name":"Foo Bar","sku":"sk12","image":"\/image.jpeg","description":"testing","offers":{"availability":"https:\/\/schema.org\/InStock","priceCurrency":"USD","price":"119.99","url":"https:\/\/gool.com","@type":"Offer","@context":"https:\/\/schema.org"},"@type":"Product","@context":"https:\/\/schema.org"},{"@id":"https:\/\/example.com\/product\/#webpage","url":"https:\/\/example.com\/product","name":"Foo Bar","@type":"WebPage","@context":"https:\/\/schema.org"}]}</script>', (string) $schema);
+		$this->assertEquals('<script type="application/ld+json">{"@context":"https:\/\/schema.org","@graph":[{"@type":"Product","@context":"https:\/\/schema.org","name":"Foo Bar","sku":"sk12","image":"\/image.jpeg","description":"testing","offers":{"@type":"Offer","@context":"https:\/\/schema.org","availability":"https:\/\/schema.org\/InStock","priceCurrency":"USD","price":"119.99","url":"https:\/\/gool.com"}},{"@type":"WebPage","@context":"https:\/\/schema.org","@id":"https:\/\/example.com\/product\/#webpage","url":"https:\/\/example.com\/product","name":"Foo Bar"}]}</script>', (string) $schema);
 
 	}
 }
