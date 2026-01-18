@@ -10,6 +10,7 @@ use Melbahja\Seo\{
 	Sitemap\NewsBuilder,
 	Sitemap\SitemapUrl,
 	Sitemap\OutputMode,
+	Exceptions\SeoException,
 	Exceptions\SitemapException
 };
 
@@ -706,7 +707,7 @@ class SitemapsTest extends TestCase
 
 	public function testInvalidDateException()
 	{
-		$this->expectException(SitemapException::class);
+		$this->expectException(SeoException::class);
 		$this->expectExceptionMessage('Invalid date format');
 
 		$sitemap = new Sitemap(
@@ -1237,11 +1238,25 @@ class SitemapsTest extends TestCase
 						->video("Video Title {$i}", [
 							'thumbnail' => "/thumb-{$i}.jpg?size=large&quality=high",
 							'description' => "Video description with special chars <>&",
-							'content_loc' => "/videos/video-{$i}.mp4?quality=hd"
+							'content_loc' => "/videos/video-{$i}.mp4?quality=hd",
+							'restriction' => [
+								[
+									'attrs' => ['relationship' => 'deny'],
+									'value' => 'US GB'
+								],
+								[
+									'attrs' => ['relationship' => 'deny'],
+									'value' => 'MA EG'
+								],
+							]
 						])
 						->video("Second Video {$i}", [
 							'thumbnail' => "/thumb2-بالعالم-{$i}.jpg",
 							'description' => 'Second video description',
+							'uploader' => [
+								'value' => 'YVideos',
+								'attrs' => ['info' => 'https://example.com/@yvideos'],
+							],
 							'player_loc' => [
 								'value' => "/player/{$i}",
 								'attrs' => ['allow_embed' => 'yes', 'autoplay' => 'ap=1']
@@ -1293,6 +1308,10 @@ class SitemapsTest extends TestCase
 		$this->assertStringContainsString('allow_embed="yes"', $newsContent);
 		$this->assertStringContainsString('hreflang="fr"', $newsContent);
 		$this->assertStringContainsString('hreflang="en"', $newsContent);
+		$this->assertStringContainsString('<video:restriction relationship="allow">US CA GB</video:restriction>', $newsContent);
+		$this->assertStringContainsString('<video:restriction relationship="deny">MA EG</video:restriction>', $newsContent);
+		$this->assertStringContainsString('<video:restriction relationship="deny">US GB</video:restriction>', $newsContent);
+		$this->assertStringContainsString('<video:uploader info="https://example.com/@yvideos">YVideos</video:uploader>', $newsContent);
 		$this->assertStringContainsString('<![CDATA[Video description with special chars <>&]]>', $newsContent);
 
 
