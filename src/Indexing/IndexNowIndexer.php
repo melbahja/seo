@@ -95,12 +95,12 @@ class IndexNowIndexer implements SeoInterface
 	 *
 	 * @param string $envVar The name of the env var of the API key, INDEXNOW_API_KEY by default.
 	 * @return self New IndexNowIndexer instance
-	 * @throws RuntimeException If the environment variable is not set or empty
+	 * @throws SeoException If the environment variable is not set or empty
 	 */
 	public static function fromEnvironment(string $envVar = 'INDEXNOW_API_KEY'): self
 	{
 		if (!($key = $_ENV[$envVar] ?? getenv($envVar))) {
-			throw new RuntimeException("IndexNow API key not found in env var: {$envVar}");
+			throw new SeoException("IndexNow API key not found in env var: {$envVar}");
 		}
 
 		return new self($key);

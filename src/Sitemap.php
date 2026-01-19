@@ -195,7 +195,7 @@ class Sitemap implements SitemapBuilderInterface
 	 *
 	 * @param  string $alias    The builder alias (e.g. 'links', 'news', 'index', 'yourBuilderAlias')
 	 * @param  array  $args      [$config, $dataSource] where $config is string|array
-	 * @return SitemapIndexInterface
+	 * @return self
 	 */
 	public function __call(string $alias, array $args): self
 	{

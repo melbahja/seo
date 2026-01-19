@@ -14,7 +14,7 @@ class RobotsValidator
 	/**
 	 * Validate robots.txt content
 	 *
-	 * @param string|Stringable $rules robots.txt file content
+	 * @param string|\Stringable $rules robots.txt file content
 	 * @return array|null Array of errors or null if valid
 	 */
 	public static function validate(string|\Stringable $rules): ?array

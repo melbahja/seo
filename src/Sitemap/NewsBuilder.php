@@ -38,9 +38,9 @@ class NewsBuilder extends LinksBuilder implements SitemapSetupableInterface
 	 *
 	 * @param string $name
 	 * @param string $lang
-	 * @return SitemapBuilderInterface
+	 * @return self
 	 */
-	public function setPublication(string $name, string $lang): SitemapBuilderInterface
+	public function setPublication(string $name, string $lang): self
 	{
 		$this->publication = ['name' => $name, 'lang' => $lang];
 		return $this;

@@ -81,7 +81,7 @@ class Utils
 	 * Wrap callable func into a Traversable generator.
 	 *
 	 * @param  callable $func  must have yields
-	 * @return Traversable
+	 * @return \Traversable
 	 */
 	public static function generator(callable $func): \Traversable
 	{
