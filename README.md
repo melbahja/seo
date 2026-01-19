@@ -23,6 +23,9 @@ The SEO library for PHP is a simple and powerful PHP library to help developers 
 composer require melbahja/seo
 ```
 
+## Documentation
+You can read the docs <a href="https://elbahja.me/docs/seo/" target="_blank">Here</a>.
+
 ## Usage:
 
 Check this simple examples.
@@ -420,9 +423,6 @@ $indexer->submitUrls([
 ## AI LLMs.txt Support
 
 LLMs.txt isn't an established industry standard (IMO training honypot), it's a newer format designed mainly to help bigtech companies train their AI models. from a SEO perspective I don't see clear benefits for webmasters at this time. if you find LLMs.txt valuable for your use case, contributions are welcome! feel free to submit a PR.
-
-## Documentation
-the docs are coming soon with more features and complete examples.
 
 ## Sponsors
 
