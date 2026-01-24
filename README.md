@@ -12,7 +12,7 @@ The SEO library for PHP is a simple and powerful PHP library to help developers 
 ### PHP SEO features:
 
 - [[👷]](#-generate-schemaorg) **Generate Rich Results schema.org ld+json**
-- [[🛀]](#-meta-tags) **Generate Meta Tags with Twitter and Open Graph Support**
+- [[🛀]](#-meta-tags) **Generate Meta Tags with X (Twitter) and Open Graph Support**
 - [[🌐]](#-sitemaps) **Generate XML Sitemaps (supports: 📰 News Sitemaps, 🖼 Images Sitemaps, 📹 Video Sitemaps, Index Sitemaps)**
 - [[📤]](#-indexing-api) **IndexNow and Google Indexing API**
 - [✅] **Schema Rich Results Validator**
@@ -422,7 +422,7 @@ $indexer->submitUrls([
 
 ## AI LLMs.txt Support
 
-LLMs.txt isn't an established industry standard (IMO training honypot), it's a newer format designed mainly to help bigtech companies train their AI models. from a SEO perspective I don't see clear benefits for webmasters at this time. if you find LLMs.txt valuable for your use case, contributions are welcome! feel free to submit a PR.
+LLMs.txt isn't an established industry standard (IMO training honeypot), it's a newer format designed mainly to help bigtech companies train their AI models. From a SEO perspective, I don't see clear benefits for webmasters at this time. If you find LLMs.txt valuable for your use case, contributions are welcome! Feel free to submit a PR.
 
 ## Sponsors
 
