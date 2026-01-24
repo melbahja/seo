@@ -13,7 +13,7 @@ The SEO library for PHP is a simple and powerful PHP library to help developers 
 
 - [[👷]](#-generate-schemaorg) **Generate Rich Results schema.org ld+json**
 - [[🛀]](#-meta-tags) **Generate Meta Tags with X (Twitter) and Open Graph Support**
-- [[🌐]](#-sitemaps) **Generate XML Sitemaps (supports: 🖺 News Sitemaps, 🖼 Images Sitemaps, 📽 Video Sitemaps, Index Sitemaps)**
+- [[🌐]](#-sitemaps) **Generate XML Sitemaps (supports: 📰 News Sitemaps, 🖼 Images Sitemaps, 📹 Video Sitemaps, Index Sitemaps)**
 - [[📤]](#-indexing-api) **IndexNow and Google Indexing API**
 - [✅] **Schema Rich Results Validator**
 - [[🧩]](https://github.com/melbahja/seo/blob/master/composer.json) **Zero Dependencies**
