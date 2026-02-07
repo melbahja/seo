@@ -183,10 +183,7 @@ class MetaTags implements SeoInterface
 	 */
 	public function canonical(string $url): self
 	{
-		return $this->push('link', [
-			'rel' => 'canonical',
-			'href' => $url
-		]);
+		return $this->push('link', ['rel' => 'canonical', 'href' => $url]);
 	}
 
 
@@ -210,21 +207,17 @@ class MetaTags implements SeoInterface
 	 */
 	public function hreflang(string $lang, string $url): self
 	{
-		return $this->push('link', [
-			'rel' => 'alternate',
-			'href' => $url,
-			'hreflang' => $lang,
-		]);
+		return $this->push('link', ['rel' => 'alternate', 'href' => $url, 'hreflang' => $lang]);
 	}
 
 	/**
 	* Set multiple alternate language URLs at once
 	*
 	* @param array $langUrls Associative array of lang => url pairs (e.g., ['en' => 'url', 'fr' => 'url'])
-	* @param string|null $default Optional x-default URL for language fallback
+	* @param string|null $defaultUrl Optional x-default URL for language fallback
 	* @return self
 	*/
-	public function hreflangs(array $langUrls, ?string $default = null): self
+	public function hreflangs(array $langUrls, ?string $defaultUrl = null): self
 	{
 		if ($default !== null) {
 			$langUrls['x-default'] = $default;

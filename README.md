@@ -422,7 +422,7 @@ $indexer->submitUrls([
 
 ## AI LLMs.txt Support
 
-LLMs.txt isn't an established industry standard (IMO training honeypot), it's a newer format designed mainly to help bigtech companies train their AI models. From a SEO perspective, I don't see clear benefits for webmasters at this time. If you find LLMs.txt valuable for your use case, contributions are welcome! Feel free to submit a PR.
+If you find LLMs.txt valuable for your use case, contributions are welcome! Feel free to submit a PR.
 
 ## Sponsors
 

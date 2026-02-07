@@ -1,8 +1,8 @@
 <?php
 namespace Melbahja\Seo;
 
-use Melbahja\Seo\Interfaces\SchemaInterface;
 use Melbahja\Seo\Schema\Thing;
+use Melbahja\Seo\Interfaces\SchemaInterface;
 
 /**
  * @package Melbahja\Seo

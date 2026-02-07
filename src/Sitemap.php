@@ -59,7 +59,20 @@ class Sitemap implements SitemapBuilderInterface
 		/**
 		 * @param string|null $sitemapBaseUrl The generated sitemaps base url in the index sitemap defaults to $baseUrl
 		 */
-		private readonly ?string $sitemapBaseUrl = null,
+		protected readonly ?string $sitemapBaseUrl = null,
+
+		/**
+		 * The output mode of generated sitemaps.
+		 *
+		 * @var OutputMode
+		 */
+		public readonly OutputMode $mode = OutputMode::TEMP,
+
+		/**
+		 * Pretty print indent
+		 * @param string|null
+		 */
+		public readonly ?string $indent = ' ',
 
 		/**
 		 * Sitemap builders map
@@ -71,19 +84,6 @@ class Sitemap implements SitemapBuilderInterface
 			'links' => LinksBuilder::class,
 			'index' => IndexBuilder::class
 		],
-
-		/**
-		 * The output mode of generated sitemaps.
-		 *
-		 * @var OutputMode
-		 */
-		protected OutputMode $mode = OutputMode::TEMP,
-
-		/**
-		 * Pretty print indent
-		 * @param string|null
-		 */
-		protected readonly ?string $indent = ' '
 	) {}
 
 
