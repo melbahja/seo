@@ -32,11 +32,17 @@ class MetaTags implements SeoInterface
 	protected ?SchemaInterface $schema = null;
 
 	/**
-	 * Initiablize new meta tags builder
+	 * Initialize new meta tags builder
 	 *
-	 * @param array $tags
+	 * @param array $meta Meta tags array. Supports:
+	 *                    - Simple: ['description' => '...', 'keywords' => '...']
+	 *                    - Nested arrays for multi-arg methods: ['verification' => ['google' => 'abc123']]
+	 *                    - Link tags: ['link' => [['rel' => '...', 'href' => '...']]]
+	 * @param array $og      Open Graph tags: ['type' => 'article', 'locale' => 'en_US']
+	 * @param array $twitter X Card tags: ['card' => 'summary', 'creator' => '@user']
+	 * @param SchemaInterface|null $schema Schema object to include as JSON-LD
 	 */
-	public function __construct(array $meta = [], array $og = [], array $twitter = [])
+	public function __construct(array $meta = [], array $og = [], array $twitter = [], ?SchemaInterface $schema = null)
 	{
 		foreach ($meta as $k => $v)
 		{
@@ -71,6 +77,10 @@ class MetaTags implements SeoInterface
 		foreach ($twitter as $k => $v)
 		{
 			$this->twitter($k, $v);
+		}
+
+		if ($schema !== null) {
+			$this->schema = $schema;
 		}
 	}
 
@@ -219,8 +229,8 @@ class MetaTags implements SeoInterface
 	*/
 	public function hreflangs(array $langUrls, ?string $defaultUrl = null): self
 	{
-		if ($default !== null) {
-			$langUrls['x-default'] = $default;
+		if ($defaultUrl !== null) {
+			$langUrls['x-default'] = $defaultUrl;
 		}
 
 		foreach ($langUrls as $lang => $url)
@@ -321,14 +331,14 @@ class MetaTags implements SeoInterface
 	*/
 	public function articleMeta(string $published, ?string $modified = null, ?string $author = null): self
 	{
-		$this->og('article:published_time', $published);
+		$this->tags[] = ['meta', ['property' => 'article:published_time', 'content' => $published]];
 
 		if ($modified) {
-			$this->og('article:modified_time', $modified);
+			$this->tags[] = ['meta', ['property' => 'article:modified_time', 'content' => $modified]];
 		}
 
 		if ($author) {
-			$this->og('article:author', $author);
+			$this->tags[] = ['meta', ['property' => 'article:author', 'content' => $author]];
 		}
 
 		return $this;
