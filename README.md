@@ -424,6 +424,14 @@ $indexer->submitUrls([
 
 If you find LLMs.txt valuable for your use case, contributions are welcome! Feel free to submit a PR.
 
+## 🚀 Who's Using melbahja/seo?
+
+- [Tiki Wiki CMS Groupware](https://gitlab.com/tikiwiki/tiki) - All-in-one collaboration platform
+- [Castopod](https://code.castopod.org/adaures/castopod) - Open-source podcast hosting platform
+- [ADD YOURS]
+
+and many more non-open source projects.
+
 ## Sponsors
 
 Special thanks to friends who support this work financially:
