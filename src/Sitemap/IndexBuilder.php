@@ -35,7 +35,8 @@ class IndexBuilder implements SitemapBuilderInterface
 	 * Sitemap options
 	 */
 	protected array $defaultOptions = [
-		'indent' => null,
+		'indent'      => null,
+		'date_format' => 'c'
 	];
 
 	/**
@@ -171,7 +172,7 @@ class IndexBuilder implements SitemapBuilderInterface
 	 */
 	public function lastMod(string|int $date): self
 	{
-		$this->sitemap['lastmod'] = Utils::formatDate($date);
+		$this->sitemap['lastmod'] = Utils::formatDate($date, $this->options['date_format']);
 		return $this;
 	}
 

@@ -402,11 +402,11 @@ class MetaTags implements SeoInterface
 				if (isset($tag[1]['property'])) {
 
 					if (str_starts_with($tag[1]['property'], 'og:')) {
-						return 3;
+						return 2;
 					}
 
 					if (str_starts_with($tag[1]['property'], 'twitter:')) {
-						return 4;
+						return 3;
 					}
 				}
 
@@ -415,10 +415,10 @@ class MetaTags implements SeoInterface
 				}
 
 				if ($tag[0] === 'link') {
-					return 2;
+					return 5;
 				}
 
-				return 5;
+				return 4;
 			};
 
 			return $getType($a) <=> $getType($b);
@@ -432,14 +432,14 @@ class MetaTags implements SeoInterface
 			foreach ($tag[1] as $a => $v)
 			{
 				// empty values will be skipped.
-				if (!$v) {
+				if ($v === '' || $v === null) {
 					continue;
 				}
 
 				// attrs values are escaped to avoid XSS attacks, but attrs names MUST be trusted!
 				// if you trust your users to set arbitary meta attr names that a STUPID idea, but
 				// anyway I did a small replace to avid common XSS chars that may hack you!
-				$a = str_replace(['"', "'", '<', '>', ' ', "\t", "\n", "\r"], '', $a);
+				$a = str_replace(['"', "'", '<', '>', ' ', "\t", "\n", "\r"], '', strip_tags($a));
 
 				// Set attr=value
 				$out .= $a .'="'. Utils::escape($v) .'" ';

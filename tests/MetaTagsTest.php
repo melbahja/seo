@@ -39,7 +39,7 @@ class MetaTagsTest extends TestCase
 
 		$this->assertNotEmpty((string) $metatags);
 
-		$this->assertEquals('<title>PHP SEO</title><meta name="title" content="PHP SEO" /><meta name="description" content="This is my description" /><meta name="author" content="Mohamed Elbahja" /><link href="https://m.example.com" rel="alternate" media="only screen and (max-width: 640px)" /><link rel="canonical" href="https://example.com" /><link rel="shortlink" href="https://git.io/phpseo" /><link rel="amphtml" href="https://apm.example.com" /><link rel="alternate" href="https://example.com/es/" hreflang="es-es" /><meta property="og:title" content="PHP SEO" /><meta property="og:description" content="This is my description" /><meta property="og:image" content="https://avatars3.githubusercontent.com/u/8259014" /><meta property="twitter:title" content="PHP SEO" /><meta property="twitter:description" content="This is my description" /><meta property="twitter:card" content="summary_large_image" /><meta property="twitter:image" content="https://avatars3.githubusercontent.com/u/8259014" />',
+		$this->assertEquals('<title>PHP SEO</title><meta name="title" content="PHP SEO" /><meta name="description" content="This is my description" /><meta name="author" content="Mohamed Elbahja" /><meta property="og:title" content="PHP SEO" /><meta property="og:description" content="This is my description" /><meta property="og:image" content="https://avatars3.githubusercontent.com/u/8259014" /><meta property="twitter:title" content="PHP SEO" /><meta property="twitter:description" content="This is my description" /><meta property="twitter:card" content="summary_large_image" /><meta property="twitter:image" content="https://avatars3.githubusercontent.com/u/8259014" /><link href="https://m.example.com" rel="alternate" media="only screen and (max-width: 640px)" /><link rel="canonical" href="https://example.com" /><link rel="shortlink" href="https://git.io/phpseo" /><link rel="amphtml" href="https://apm.example.com" /><link rel="alternate" href="https://example.com/es/" hreflang="es-es" />',
 			str_replace("\n", '', (string)$metatags)
 		);
 
@@ -352,15 +352,20 @@ class MetaTagsTest extends TestCase
 
 		$output = (string) $metatags;
 
-		// Check order: meta tags first, then links, then og, then twitter
 		$metaPos = strpos($output, 'name="description"');
 		$linkPos = strpos($output, 'rel="canonical"');
 		$ogPos = strpos($output, 'property="og:title"');
 		$twitterPos = strpos($output, 'property="twitter:title"');
 
-		$this->assertLessThan($linkPos, $metaPos);
-		$this->assertLessThan($ogPos, $linkPos);
-		$this->assertLessThan($twitterPos, $ogPos);
+		$this->assertNotFalse($metaPos);
+		$this->assertNotFalse($linkPos);
+		$this->assertNotFalse($ogPos);
+		$this->assertNotFalse($twitterPos);
+
+		// Order: meta -> og -> twitter -> link
+		$this->assertTrue($metaPos < $ogPos);
+		$this->assertTrue($ogPos < $twitterPos);
+		$this->assertTrue($twitterPos < $linkPos);
 	}
 
 	public function testEmptyObjectOutput()

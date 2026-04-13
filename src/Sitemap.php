@@ -90,6 +90,12 @@ class Sitemap implements SitemapBuilderInterface
 		 * @param boolean
 		 */
 		private bool $hideGenerator = false,
+
+		/**
+		 * Sets the date format for locs
+		 * @param string
+		 */
+		private string $dateFormat = 'c',
 	) {}
 
 
@@ -132,7 +138,7 @@ class Sitemap implements SitemapBuilderInterface
 		$index =  new IndexBuilder(
 			mode:     $this->mode,
 			baseUrl:  $this->getSitemapBaseUrl(),
-			options:  ['indent' => $this->indent],
+			options:  ['indent' => $this->indent, 'date_format' => $this->dateFormat],
 			filePath: $this->saveDir . DIRECTORY_SEPARATOR . $this->indexName,
 			hideGenerator: $this->hideGenerator,
 		);
@@ -232,7 +238,8 @@ class Sitemap implements SitemapBuilderInterface
 		$name = $options['name'];
 		unset($options['name']);
 
-		$options['indent'] = $options['indent'] ?? $this->indent;
+		$options['indent']      = $options['indent'] ?? $this->indent;
+		$options['date_format'] = $options['date_format'] ?? $this->dateFormat;
 
 		$this->dSources[$name] = $args[1];
 		$this->sitemaps[$name] = new $builder(

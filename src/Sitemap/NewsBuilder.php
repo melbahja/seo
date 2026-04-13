@@ -19,7 +19,10 @@ class NewsBuilder extends LinksBuilder implements SitemapSetupableInterface
 	 * Default publication
 	 * @var array
 	 */
-	private $publication = ['name' => null, 'lang' => null];
+	private $publication = [
+		'name' => null,
+		'lang' => null
+	];
 
 	/**
 	 * Initialize NewsBuilder

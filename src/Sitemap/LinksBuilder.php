@@ -44,12 +44,13 @@ class LinksBuilder implements SitemapBuilderInterface
 	 * Sitemap options
 	 */
 	protected array $defaultOptions = [
-		'images'    => false,
-		'videos'    => false,
-		'news'      => false,
-		'localized' => false,
-		'cdata'     => [],   // fields to wrap in CDATA for eg: ['video:title', 'video:description', 'image:caption']
-		'indent'    => null, // pretty print indent character
+		'images'      => false,
+		'videos'      => false,
+		'news'        => false,
+		'localized'   => false,
+		'cdata'       => [],   // fields to wrap in CDATA for eg: ['video:title', 'video:description', 'image:caption']
+		'indent'      => null, // pretty print indent character
+		'date_format' => 'c'
 	];
 
 	/**
@@ -386,7 +387,7 @@ class LinksBuilder implements SitemapBuilderInterface
 	 */
 	public function lastMod(string|int $date): self
 	{
-		$this->url['lastmod'] = Utils::formatDate($date);
+		$this->url['lastmod'] = Utils::formatDate($date, $this->options['date_format']);
 		return $this;
 	}
 

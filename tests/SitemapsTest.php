@@ -70,6 +70,47 @@ class SitemapsTest extends TestCase
 		$this->assertFileExists($this->testDir . '/sitemap.xml');
 	}
 
+	public function testLastModDateFormat()
+	{
+		$sitemapDefault = new LinksBuilder(
+			baseUrl: 'https://example.com',
+			mode: OutputMode::MEMORY,
+		);
+
+		$date = date('c');
+		$sitemapDefault->loc('/posts/13')->priority(0.9)->lastMod($date);
+
+		$xml = $sitemapDefault->render();
+		$this->assertStringContainsString($date, $xml);
+		$this->assertStringContainsString("<lastmod>{$date}</lastmod>", $xml);
+
+		// Custom format 'Y-m-d'
+		$sitemapCustom = new LinksBuilder(
+			baseUrl: 'https://example.com',
+			mode: OutputMode::MEMORY,
+			options: ['date_format' => 'Y-m-d'],
+		);
+
+		$dt = time();
+		$sitemapCustom->loc('/posts/13')->lastMod(date('c', $dt));
+
+		$xml = $sitemapCustom->render();
+		$this->assertStringContainsString('<lastmod>'. date('Y-m-d', $dt) .'</lastmod>', $xml);
+
+
+		$sitemapCustom = new IndexBuilder(
+			baseUrl: 'https://example.com',
+			mode: OutputMode::MEMORY,
+			options: ['date_format' => 'Y-m-d'],
+		);
+
+		$dt = time();
+		$sitemapCustom->url('/posts/13')->lastMod(date('c', $dt));
+
+		$xml = $sitemapCustom->render();
+		$this->assertStringContainsString('<lastmod>'. date('Y-m-d', $dt) .'</lastmod>', $xml);
+	}
+
 	public function testSitemapMemoryMode()
 	{
 		$sitemap = new Sitemap(

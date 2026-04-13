@@ -116,13 +116,14 @@ class Utils
 	 * Normalize a date value to ISO 8601 format.
 	 *
 	 * @param string|int $date
+	 * @param string     $format
 	 * @return string ISO 8601 date.
 	 * @throws SeoException if the format is invalid.
 	 */
-	public static function formatDate(string|int $date): string
+	public static function formatDate(string|int $date, string $format = 'c'): string
 	{
-		if (($timestamp = is_int($date) ? $date : strtotime($date)) !== false) {
-			return date('c', $timestamp);
+		if (($ts = is_int($date) ? $date : strtotime($date)) !== false) {
+			return date($format, $ts);
 		}
 
 		throw new SeoException("Invalid date format: {$date}");
